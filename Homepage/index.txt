@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>My test page</title>
+  </head>
+  <body>
+    <h1>Automates</h1>
+    <p>The repository to employment pipeline</p>
+    <img src="images/Robotocat" alt="https://octodex.github.com/Robotocat/" />
+  </body>
+</html>
