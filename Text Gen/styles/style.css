@@ -1,0 +1,159 @@
+/* 
+Font color:    #f0f6fc
+Border color:  #2d343c
+Light gray:    #f0f6fc
+Black:         #010409
+*/
+
+html {
+  font-size: 10px;
+  font-family: "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  color: #f0f6fc;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-size: 30px;
+  text-align: left;
+  font-weight: 600;
+  line-height: 0.75;
+  margin: 30px 0px 30px 20px;
+  color: #f0f6fc;
+}
+
+h2 {
+  font-size: 20px;
+  text-align: center;
+  font-weight: 400;
+  line-height: 1;
+  color: #f0f6fc;
+}
+
+p, li {
+  font-size: 16px;
+  line-height: 2;
+  letter-spacing: 1px;
+}
+
+
+html {
+  background-color: #0d1117;
+}
+
+.brand {
+  height: 20px;
+  margin: 0px auto;
+  background-color: #010409;
+  padding: 50px 0 50px 0;
+  border-bottom: 1px solid #2d343c;
+}
+
+img {
+  display: block;
+  margin: 0 auto;
+}
+
+.button {
+  border: 1px solid #2d343c;
+  border-radius: 8px;
+  color: #f0f6fc;
+  background-color: #0d1117;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  font-size: 16px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #2d343c;
+  color: white;
+}
+
+.button1 {
+  margin: 30px auto 140px;
+}
+
+.button2{
+  border-radius: 100px;
+  padding: 15px 24px;
+  font-size: 25px;
+  font-weight: 50;
+  margin-right: 9px;
+  margin-bottom: 10px;
+}
+
+.git{
+  position: fixed; 
+  top: 0;
+  right: 0;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 12px;
+  font-weight: 10;
+  margin-right: 9px;
+  margin-top: 10px;
+}
+
+.top{
+  width: 100%;
+  position: fixed; 
+  background-color: #010409;
+  height: 55px;
+  border-bottom: 1px solid #2d343c;
+}
+
+.buffer{
+  height: 55px;
+}
+
+.footer{
+  position: fixed; 
+  bottom: 0;
+  right: 0;
+}
+
+.column {
+  float: left;
+}
+
+.left {
+  width: 60%;
+}
+
+.right {
+  width: 40%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+textarea {
+}
+
+.selector{
+}
+
+.generated {
+  width: 99%;
+  height: 100%;
+  resize: none;
+}
+
+.description {
+  margin: 0px 0px 0px 30px;
+}
+
+.dropdown{
+  margin: 0px 0px 0px 30px;
+}
