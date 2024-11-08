@@ -14,33 +14,57 @@ class Draft(models.Model):
   time = models.TimeFeild(auto_now_add=True)
   
   def setTone(self, tone):
-
+    self.postTone = tone
+    self.save()
+    
   def setStyle(self, style):
-
-  def setHastags(self, style):
+    self.postStyle = style
+    self.save()
+  
+  def setHastags(self, hashtags):
+    self.postHashtags = hashtags
+    self.save()
 
   def generateDescription(self):
+    # call's chatgpt_api
+    # awaiting implementation
+    self.save()
 
-  def changeDescription(self, description):
+  def setDescription(self, description):
+    self.generatedDescription = description
+    self.save()
 
-  def changeUserDescription(self, description):
+  def setUserDescription(self, description):
+    self.generatedUserDescription = description
+    self.save()
 
   def setRepoLink(self, link):
-
+    self.respositoryLink = link
+    self.save()
+    
   def getDescription(self):
+    return self.generatedDescription
 
   def setAudience(self):
+    self.postAudience = audience
+    seld.save()
 
   def getDate(self):
-
+    return self.date
+    
   def getTime(self):
-
+    return self.time
+  
   def validatePostCompletion(self):
+    return bool(self.respositoryLink and (self.generatedDescription or self.userDescription))
 
   def saveDraft(self):
+    self.save()
 
-  def setDateAndTime(self):
-    
+  def setDateAndTime(self, date, time):
+    self.date = date
+    self.time = time
+    self.save()
 
 class Post(models.Model):
   description = models.TextFeild()
@@ -48,14 +72,24 @@ class Post(models.Model):
   time = models.TimeFeild(auto_now_add=True)
 
   def fillFromDraft(self, draft):
+    self.description = draft.getDescription()
+    self.date = datetime.now.date()
+    self.time = datetime.now.time()
+    self.save()
 
   def getDescription(self):
+    return self.description
 
-  def setDateAndTime(self):
+  def setDateAndTime(self, date, time):
+    self.date = date
+    self.time = time
+    self.save()
 
   def getDate(self):
+    return self.date
 
   def getTime(self):
+    return self.time
 
 class UserProfile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
@@ -66,25 +100,34 @@ class UserProfile(models.Model):
   username = models.CharField(max_length=150, unique=True)
 
   def getDrafts(self):
+    return self.drafts.all()
 
   def getPosts(self):
+    return self.posts.all()
 
   def postToLinkedIn(self, post):
+    # to be implemented
 
   def archivePost(self, post):
+    self.posts.add(post)
 
   def refreshLinkedInAccess(self):
+    # to be implemented
 
   def refreshGithubAccess(self):
+    # to be implemented
 
   def addDraft(self, draft):
+    self.drafts.add(draft)
 
   def removeDraft(self, draft):
-
-  def postHistory(self):
+    self.drafts.remove(draft)
 
   def authenticateLinkedIn(self):
+    # to be implemented
 
   def authenticateGithub(self):
+    # to be implemented
 
   def getRepositories(self):
+    # to be implemented
