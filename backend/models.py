@@ -12,6 +12,7 @@ class Draft(models.Model):
   generatedDescription = models.TextFeild()
   date = models.DateFeild(auto_now_add=True)
   time = models.TimeFeild(auto_now_add=True)
+  aiAccess = ChatGPTAPI()
   
   def setTone(self, tone):
     self.postTone = tone
@@ -80,9 +81,9 @@ class Post(models.Model):
   def getDescription(self):
     return self.description
 
-  def setDateAndTime(self, date, time):
-    self.date = date
-    self.time = time
+  def setDateAndTime(self):
+    self.date = datetime.now.date()
+    self.time = datetime.now.time()
     self.save()
 
   def getDate(self):
