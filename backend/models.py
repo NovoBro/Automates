@@ -13,48 +13,69 @@ class Draft(models.Model):
   date = models.DateFeild(auto_now_add=True)
   time = models.TimeFeild(auto_now_add=True)
   aiAccess = ChatGPTAPI()
+
+  def setRepoLink(self, link):
+    self.respositoryLink = link
+    self.save()
+
+  def getRepoLink(self):
+    return self.repositoryLink
+
+  def setUserDescription(self, description):
+    self.generatedUserDescription = description
+    self.save()
+    
+  def getUserDescription(self):
+    return self.userDescription
+
+  def setAudience(self, audience):
+    self.postAudience = audience
+    seld.save()
+
+  def getAudience(self):
+    return self.postAudience
   
   def setTone(self, tone):
     self.postTone = tone
     self.save()
+
+  def getTone(self):
+    return self.tone
     
   def setStyle(self, style):
     self.postStyle = style
     self.save()
+
+  def getStyle(self):
+    return self.style
   
   def setHastags(self, hashtags):
     self.postHashtags = hashtags
     self.save()
 
-  def generateDescription(self):
-    # call's chatgpt_api
-    # awaiting implementation
-    self.save()
+  def getHastags(self):
+    return self.postHashtags
 
-  def setDescription(self, description):
-    self.generatedDescription = description
+  def setDateAndTime(self):
+    self.date = datetime.now.date()
+    self.time = datetime.now.time()
     self.save()
-
-  def setUserDescription(self, description):
-    self.generatedUserDescription = description
-    self.save()
-
-  def setRepoLink(self, link):
-    self.respositoryLink = link
-    self.save()
-    
-  def getDescription(self):
-    return self.generatedDescription
-
-  def setAudience(self):
-    self.postAudience = audience
-    seld.save()
 
   def getDate(self):
     return self.date
     
   def getTime(self):
     return self.time
+
+  def setDescription(self):
+    if aiAccess.authentice():
+      self.generatedDescription = aiAccess.generateDescription(self)
+    else:
+      self.generatedDescription = "AI Authentication Failed."
+    self.save()
+    
+  def getDescription(self):
+    return self.generatedDescription
   
   def validatePostCompletion(self):
     return bool(self.respositoryLink and (self.generatedDescription or self.userDescription))
@@ -62,15 +83,10 @@ class Draft(models.Model):
   def saveDraft(self):
     self.save()
 
-  def setDateAndTime(self, date, time):
-    self.date = date
-    self.time = time
-    self.save()
-
 class Post(models.Model):
   description = models.TextFeild()
-  date = models.DateFeild(auto_now_add=True)
-  time = models.TimeFeild(auto_now_add=True)
+  date = models.DateField(auto_now_add=True)
+  time = models.TimeField(auto_now_add=True)
 
   def fillFromDraft(self, draft):
     self.description = draft.getDescription()
@@ -81,48 +97,27 @@ class Post(models.Model):
   def getDescription(self):
     return self.description
 
-  def setDateAndTime(self):
-    self.date = datetime.now.date()
-    self.time = datetime.now.time()
-    self.save()
-
   def getDate(self):
     return self.date
 
   def getTime(self):
     return self.time
 
+  def setDateAndTime(self):
+    self.date = datetime.now.date()
+    self.time = datetime.now.time()
+    self.save()
+
+
 class UserProfile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
-  drafts = models.ManyToManyField(Draft, blank=True, related_name="user_profiles")
-  posts = models.ManyToManyField(Post, blank=True, related_name="user_profiles")
+  drafts = models.OneToManyField(Draft, blank=True, related_name="user_profiles")
+  posts = models.OneToManyField(Post, blank=True, related_name="user_profiles")
   linkedInAccess = models.CharField(max_length=255)
   githubAccess = models.CharField(max_length=255)
   username = models.CharField(max_length=150, unique=True)
-
-  def getDrafts(self):
-    return self.drafts.all()
-
-  def getPosts(self):
-    return self.posts.all()
-
-  def postToLinkedIn(self, post):
-    # to be implemented
-
-  def archivePost(self, post):
-    self.posts.add(post)
-
-  def refreshLinkedInAccess(self):
-    # to be implemented
-
-  def refreshGithubAccess(self):
-    # to be implemented
-
-  def addDraft(self, draft):
-    self.drafts.add(draft)
-
-  def removeDraft(self, draft):
-    self.drafts.remove(draft)
+  linkedInAccess = LinkedInAPI()
+  gitHubAccess = GitHubAPI()
 
   def authenticateLinkedIn(self):
     # to be implemented
@@ -130,5 +125,37 @@ class UserProfile(models.Model):
   def authenticateGithub(self):
     # to be implemented
 
+  def refreshLinkedInAccess(self):
+    # to be implemented
+
+  def refreshGithubAccess(self):
+    # to be implemented
+
+  def getDrafts(self):
+    return self.drafts.all()
+
+  def getPosts(self):
+    return self.posts.all()
+
   def getRepositories(self):
     # to be implemented
+
+  def addDraft(self, draft):
+    self.drafts.add(draft)
+
+  def addPost(self, post):
+    self.posts.add(post)
+
+  def removeDraft(self, draft):
+    self.drafts.remove(draft)
+
+  def postToLinkedIn(self, draft):
+    post = Post()
+    post.fillFromDraft(draft)
+    if linkedInAccess.postToLinkedIn(post):
+      self.addPost(post)
+      self.removeDraft(draft)
+      self.save()
+      return True
+    else:
+      return False
