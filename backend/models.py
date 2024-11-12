@@ -9,6 +9,7 @@ class Draft(models.Model):
   postTone = models.CharField(max_length=50)
   postStyle = models.CharField(max_length=50)
   postHashtags = models.TextFeild()
+  aiPrompt = models.TextFeild()
   generatedDescription = models.TextFeild()
   date = models.DateFeild(auto_now_add=True)
   time = models.TimeFeild(auto_now_add=True)
@@ -67,11 +68,15 @@ class Draft(models.Model):
   def getTime(self):
     return self.time
 
+  def setPrompt(self):
+    self.aiPrompt = "You will be generating a LinkedIn post by reading this GitHub repository: " + str(self.repositoryLink) + ". Please create the post description for a " + self.postAudience + " audience with a " + self.postTone + " tone and a " + self.postStyle + " style. The following is a description of the GitHub repository, which you will use to understand the purpose and use of the repository provided to you previously: " + self.userDescription + ". Also include these hashtags in the post: " + self.postHashtags + ". Only return the following in your response: a description for a LinkedIn post about the repository provided, a link to the repositories, and the hashtags provided."  
+
+  def getPrompt(self):
+    return self.aiPrompt
+
   def setDescription(self):
-    if aiAccess.authentice():
-      self.generatedDescription = aiAccess.generateDescription(self)
-    else:
-      self.generatedDescription = "AI Authentication Failed."
+    self.setPrompt()
+    self.generatedDescription = aiAccess.generateDescription(self.getPrompt())
     self.save()
     
   def getDescription(self):
