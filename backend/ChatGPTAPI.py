@@ -6,7 +6,6 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 class ChatGPTAPI():
   def generateDescription(draft):
-    return draft.getUserDescription()
     try:
         response = openai.Completion.create(
             engine="text-davinci-003", 
