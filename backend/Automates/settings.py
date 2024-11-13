@@ -22,6 +22,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-37_4+lag+nhcsr0%f_zmeiod050ql#tftfdx!p*r!h20n3km_&'
 
+#Github Settings variables
+GITHUB_CLIENT_ID = 'Iv23liXW5BCZwJa83J0T'
+GITHUB_CLIENT_SECRET = 'cf9649a8141bb99c4726f74806dc7a42c06a0ebc'
+GITHUB_REDIRECT_URI = '' #don't have a redirect url rn
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
