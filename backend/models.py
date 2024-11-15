@@ -3,16 +3,16 @@ from django.contrib.auth.models import User
 from datetime import datetime
 
 class Draft(models.Model):
-  repositoryLink = models.URLFeild(max_length=255)
-  userDescription = models.TextFeild()
+  repositoryLink = models.URLField(max_length=255)
+  userDescription = models.TextField()
   postAudience = models.CharField(max_length=50)
   postTone = models.CharField(max_length=50)
   postStyle = models.CharField(max_length=50)
-  postHashtags = models.TextFeild()
-  aiPrompt = models.TextFeild()
-  generatedDescription = models.TextFeild()
-  date = models.DateFeild(auto_now_add=True)
-  time = models.TimeFeild(auto_now_add=True)
+  postHashtags = models.TextField()
+  aiPrompt = models.TextField()
+  generatedDescription = models.TextField()
+  date = models.DateField(auto_now_add=True)
+  time = models.TimeField(auto_now_add=True)
   aiAccess = ChatGPTAPI()
 
   def setRepoLink(self, link):
