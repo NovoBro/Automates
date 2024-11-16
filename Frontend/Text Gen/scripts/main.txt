@@ -1,7 +1,0 @@
-console.log("Script loaded");
-
-const helpButton = document.querySelector("button");
-
-document.querySelector("button").addEventListener("click", function () {
-  alert("Help");
-});
