@@ -89,7 +89,7 @@ class Draft(models.Model):
     self.save()
 
 class Post(models.Model):
-  description = models.TextFeild()
+  description = models.TextField()
   date = models.DateField(auto_now_add=True)
   time = models.TimeField(auto_now_add=True)
 
