@@ -154,6 +154,11 @@ textarea {
   margin: 0px 0px 0px 30px;
 }
 
-.dropdown{
+.dropdown {
   margin: 0px 0px 0px 30px;
+}
+
+.otherBox {
+  margin: 10px 0px 0px 30px;
+  display: none;
 }
