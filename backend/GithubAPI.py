@@ -21,10 +21,8 @@ class GitHubAPI():
         )
         return redirect(github_auth_url)
     
-    #WIP
     def getUserrepositories():
         return
     
-    #WIP
     def getRepoDetails():
         return
