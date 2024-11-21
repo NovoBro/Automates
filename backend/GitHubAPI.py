@@ -21,8 +21,11 @@ class GitHubAPI():
         )
         return redirect(github_auth_url)
     
-    def getUserrepositories():
-        return
+    def sendUserRepos(request):
+        repos = {
+
+        }
+        return JsonResponse(repos)
     
     def getRepoDetails():
         return
