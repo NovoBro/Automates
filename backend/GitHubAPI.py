@@ -1,6 +1,7 @@
 import requests
 import random
 import string
+from django.http import redirect
 from django.conf import settings
 
 class GitHubAPI():
