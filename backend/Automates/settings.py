@@ -25,7 +25,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 #Github Settings variables
 GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
 GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
-GITHUB_REDIRECT_URI = '' #don't have a redirect url rn
+GITHUB_REDIRECT_URI = 'http://localhost:8000/github/auth' #don't have a redirect url rn
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
