@@ -162,3 +162,33 @@ textarea {
   margin: 10px 0px 0px 30px;
   display: none;
 }
+
+.btn-group{
+  margin: 0px 50px;
+}
+
+.btn-group button {
+  background-color: #010409;
+  border: 1px solid #2d343c;
+  color: #f0f6fc;
+  padding: 15px 24px 15px 24px;
+  cursor: pointer; /* Pointer/hand icon */
+  width: 50%; /* Set a width if needed */
+  display: block; /* Make the buttons appear below each other */
+  font-size: 20px;
+  text-align: left;
+  font-weight: 200;
+  line-height: 0.75;
+  color: #f0f6fc;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.btn-group button:not(:last-child) {
+  border-bottom: none; /* Prevent double borders */
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+  background-color: #2d343c;
+}
