@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 import random
 import string
+import requests
 from django.http import JsonResponse, HttpResponseRedirect
 from django.conf import settings
 
