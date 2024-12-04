@@ -1,11 +1,18 @@
 console.log("Script loaded");
 
-const newButton = document.querySelector("button.button1");
+console.log(localStorage.getItem("isLoggedIn"));
+var isLoggedIn = localStorage.getItem("isLoggedIn") ?? false;
+localStorage.setItem("isLoggedIn", isLoggedIn);
+
+const submit = document.querySelector('input[type="submit"]');
 const helpButton = document.querySelector("button.button2");
 
-newButton.addEventListener("click", function () {
+submit.addEventListener("click", function () {
+  event.preventDefault();
+  localStorage.setItem("isLoggedIn", "true");
+  console.log("User is logged in!");
   window.open(
-    "http://make-everything-ok.com/", "_blank");
+    "../Homepage/index.html", "_self");
 });
 
 helpButton.addEventListener("click", function () {

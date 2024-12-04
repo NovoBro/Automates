@@ -89,13 +89,14 @@ img {
   margin-bottom: 10px;
 }
 
-.login{
+.topButton{
   border-radius: 5px;
   padding: 10px 15px;
   font-size: 12px;
   font-weight: 10;
   margin-right: 9px;
   margin-top: 10px;
+  display: none;
 }
 
 .top{

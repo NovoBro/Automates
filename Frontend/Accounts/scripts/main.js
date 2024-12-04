@@ -1,11 +1,10 @@
 console.log("Script loaded");
 
-const newButton = document.querySelector("button.button1");
+const newButton = document.querySelector("button.gitButton");
 const helpButton = document.querySelector("button.button2");
 
 newButton.addEventListener("click", function () {
-  window.open(
-    "http://make-everything-ok.com/", "_blank");
+    window.open('/github/auth/', '_blank'); 
 });
 
 helpButton.addEventListener("click", function () {
