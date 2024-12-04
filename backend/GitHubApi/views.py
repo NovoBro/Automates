@@ -1,5 +1,4 @@
-from django.shortcuts import render
-import requests
+from django.shortcuts import render, redirect
 import random
 import string
 from django.http import JsonResponse, HttpResponseRedirect
