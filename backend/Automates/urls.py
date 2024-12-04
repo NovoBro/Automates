@@ -16,10 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from GitHubApi.views import github_authenticate, fetch_user_repos
+from GitHubApi.views import githubAuth, fetchUserRepos
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     #connects to GitHubApi App specific urls
-    path('github/', include('gitHubApi.urls')),
+    path('github/', include('GitHubApi.urls')),
 ]
