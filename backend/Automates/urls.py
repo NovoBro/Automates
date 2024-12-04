@@ -15,10 +15,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from GitHubApi.views import github_authenticate, fetch_user_repos
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('repos/', fetch_user_repos, name='fetch_user_repos'),
+    #connects to GitHubApi App specific urls
+    path('github/', include('gitHubApi.urls')),
 ]

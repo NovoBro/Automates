@@ -2,7 +2,7 @@ from django.shortcuts import render
 import requests
 import random
 import string
-from django.http import redirect, JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.conf import settings
 
 #GitHubAPI class
@@ -28,7 +28,7 @@ class GitHubAPI():
         #defines headers
         headers = {
             'Accept': 'application/vnd.github+json',
-            'Authorization': 'Bearer <YOUR-TOKEN>',
+            'Authorization': 'Bearer <auth_token>',
             'X-GitHub-Api-Version': '2022-11-28',
         }
 
@@ -68,7 +68,7 @@ class GitHubAPI():
         'redirect_uri': settings.GITHUB_REDIRECT_URI,
         }
         
-        response = request.post(token_url, headers=headers, data=data)
+        response = requests.post(token_url, headers=headers, data=data)
         if response.status_code == 200:
             token_data = response.json()
             access_token = token_data.get('access_token')
@@ -96,5 +96,7 @@ def github_callback(request):
     result = GitHubAPI.get_access_token(code, state, request)
     if "error" in result:
         return JsonResponse(result, status=400)
+    access_token = result.get('access_token')
+    redirect_url = f"{settings.GITHUB_REDIRECT_URI}?token={access_token}"
 
-    return JsonResponse(result, status=200)
+    return HttpResponseRedirect(redirect_url)
