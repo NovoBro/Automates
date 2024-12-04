@@ -78,6 +78,7 @@ img {
 
 .button1 {
   margin: 30px auto 140px;
+  display: none;
 }
 
 .button2{

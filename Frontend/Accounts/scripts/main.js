@@ -1,12 +1,13 @@
 console.log("Script loaded");
 
 const newButton = document.querySelector("button.gitButton");
-const helpButton = document.querySelector("button.button2");
+const signOutButton = document.querySelector("button.signOutButton");
 
 newButton.addEventListener("click", function () {
-    window.open('/github/auth/', '_blank'); 
+  window.open('/github/auth/', '_blank'); 
 });
 
-helpButton.addEventListener("click", function () {
-  alert("Help me");
+signOutButton.addEventListener("click", function () {
+  localStorage.setItem("isLoggedIn", "false");
+  window.open("../Homepage/index.html", "_self");
 });

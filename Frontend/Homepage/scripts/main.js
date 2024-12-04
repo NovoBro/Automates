@@ -1,5 +1,4 @@
 console.log("Script loaded");
-console.log(localStorage.getItem("isLoggedIn"));
 var isLoggedIn = localStorage.getItem("isLoggedIn") ?? false;
 localStorage.setItem("isLoggedIn", isLoggedIn);
 if (isLoggedIn === "true") {
@@ -10,8 +9,19 @@ else { console.log("User is not logged in!"); }
 const newButton = document.querySelector("button.button1");
 const loginButton = document.querySelector("button.loginButton");
 const signupButton = document.querySelector("button.signupButton");
-const accountButton = document.querySelector("button.loginButton");
+const accountButton = document.querySelector("button.accountButton");
 const helpButton = document.querySelector("button.button2");
+
+if(isLoggedIn === "false"){
+    signupButton.style.display = "inline";
+    loginButton.style.display = "inline";
+    console.log("hide");
+  }
+else{
+  accountButton.style.display = "inline";
+  newButton.style.display = "block";
+  console.log("display");
+}
 
 newButton.addEventListener("click", function () {
   window.open(
@@ -27,24 +37,9 @@ signupButton.addEventListener("click", function () {
 });
 
 accountButton.addEventListener("click", function () {
-  if (isLoggedIn === "true") {
-    window.open("../Accounts/index.html", "_self");
-  } else {
-    window.open("../Sign-In/index.html", "_self");
-  }
+  window.open("../Accounts/index.html", "_self");
 });
 
 helpButton.addEventListener("click", function () {
   alert("Help me");
 });
-
-if(isLoggedIn === "false"){
-    newButton.style.display = "none";
-    signupButton.style.display = "inline";
-    loginButton.style.display = "inline";
-    console.log("hide");
-  }
-else{
-  accountButton.style.display = "inline";
-  console.log("display");
-}
