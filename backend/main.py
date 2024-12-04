@@ -1,6 +1,6 @@
 import os
 import django
-from GitHubAPI import GitHubAPI
+from GitHubApi.views import GitHubAPI
 from ChatGPTAPI import ChatGPTAPI
 import sqlite3
 
