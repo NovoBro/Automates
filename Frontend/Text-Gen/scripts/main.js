@@ -66,7 +66,7 @@ function handleToneChange() {
 
 var text = `{
   "repositories": [
-    {"name": "Ballistic missile", "date created": "1986-12-14", "description": "Fun for the whole family!"},
+    {"name": "Automates", "date created": "1986-12-14", "description": "Text-generator for LinkedIn posts"},
     {"name": "Test repo", "date created": "1986-12-14", "description": "description100!"},
     {"name": "I can't believe it's not butter!", "date created": "1986-12-14", "description": "Friday"},
     {"name": "Super Computer Sim", "date created": "1986-12-14", "description": "holy mackeral"},

@@ -14,20 +14,21 @@
 <div class="row">
   <!-- Left Column (Form Inputs) -->
   <div class="column left">
-
     <!-- Header Section for Repository/Draft -->
     <h2 style="font-size: 1.8rem; font-weight: bold; margin-bottom: 10px;">Pick a repository or a draft:</h2>
     <h3 style="font-size: 1.4rem; font-weight: normal; margin-bottom: 20px;">GitHub Repositories:</h3>
 
     <!-- Repositories Section -->
-    <div class="btn-group"></div>
+    <div class="btn-group"></div> <!-- Placeholder for repository buttons -->
 
     <!-- Draft Section -->
     <h3 style="font-size: 1.4rem; font-weight: normal; margin-bottom: 20px;">Drafts:</h3>
     <div class="draft-group"></div> <!-- Placeholder for drafts -->
 
+    <!-- Form for generating drafts -->
     <form method="POST" action="{% url 'automates_app:home' %}">
       {% csrf_token %}
+      
       <!-- Description Selector -->
       <div class="selector">
         <h1>Description</h1>
@@ -43,7 +44,7 @@
           <option value="option3">Co-workers</option>
           <option value="other">Other</option>
         </select>
-        <textarea id="audienceTextBox" name="audienceTextBox" class="otherBox" rows="1" cols="20"></textarea>
+        <textarea id="audienceTextBox" name="audienceTextBox" class="otherBox" rows="1" cols="20" style="display: none;"></textarea>
       </div>
 
       <!-- Style Selector -->
@@ -55,7 +56,7 @@
           <option value="option3">Corporate</option>
           <option value="other">Other</option>
         </select>
-        <textarea id="styleTextBox" name="styleTextBox" class="otherBox" rows="1" cols="20"></textarea>
+        <textarea id="styleTextBox" name="styleTextBox" class="otherBox" rows="1" cols="20" style="display: none;"></textarea>
       </div>
 
       <!-- Tone Selector -->
@@ -67,7 +68,7 @@
           <option value="option3">Casual</option>
           <option value="other">Other</option>
         </select>
-        <textarea id="toneTextBox" name="toneTextBox" class="otherBox" rows="1" cols="20"></textarea>
+        <textarea id="toneTextBox" name="toneTextBox" class="otherBox" rows="1" cols="20" style="display: none;"></textarea>
       </div>
 
       <!-- Hashtags -->
@@ -88,10 +89,12 @@
   </div>
 
   <!-- Right Column (Generated Text) -->
-  <div class="column right">
+<div class="column right">
     <textarea id="generated" name="generated" class="generated" rows="15" cols="60" readonly>Text will be generated here.</textarea>
-  </div>
+    
+    <!-- Copy button below the generated text -->
+    <button id="copyButton" class="button small">Copy Generated Text</button>
 </div>
 
-{% endblock content %}
 
+{% endblock content %}

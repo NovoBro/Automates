@@ -25,7 +25,8 @@ load_dotenv()
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = 'your-unique-secret-key'
+
 
 #Github Settings variables
 GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
@@ -39,7 +40,8 @@ CHAT_GPT_API_KEY = os.getenv("CHAT_GPT_API_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
 
 
 # Application definition
@@ -137,3 +139,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = "automates_app:home"
+LOGOUT_REDIRECT_URL = "automates_app:login"
