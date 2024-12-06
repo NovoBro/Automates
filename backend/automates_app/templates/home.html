@@ -1,9 +1,10 @@
 {% extends "automates_app.html" %}
+
 {% block content %}
 <!-- Home Page Content -->
 <div class="top">
   <a href="{% url 'automates_app:logout' %}" class="button small">Logout</a>
-  <a href="{% url 'automates_app:accounts' %}" class="button small">Account Settings</a> <!-- Updated link to accounts page -->
+  <a href="{% url 'automates_app:accounts' %}" class="button small">Account Settings</a>
   {% load static %}
   <script src="{% static 'js/main.js' %}" defer></script>
 </div>
@@ -13,7 +14,17 @@
 <div class="row">
   <!-- Left Column (Form Inputs) -->
   <div class="column left">
+
+    <!-- Header Section for Repository/Draft -->
+    <h2 style="font-size: 1.8rem; font-weight: bold; margin-bottom: 10px;">Pick a repository or a draft:</h2>
+    <h3 style="font-size: 1.4rem; font-weight: normal; margin-bottom: 20px;">GitHub Repositories:</h3>
+
+    <!-- Repositories Section -->
     <div class="btn-group"></div>
+
+    <!-- Draft Section -->
+    <h3 style="font-size: 1.4rem; font-weight: normal; margin-bottom: 20px;">Drafts:</h3>
+    <div class="draft-group"></div> <!-- Placeholder for drafts -->
 
     <form method="POST" action="{% url 'automates_app:home' %}">
       {% csrf_token %}
@@ -65,7 +76,14 @@
         <textarea id="hashtags" name="hashtags" class="description" rows="5" cols="50">Enter hashtags here.</textarea>
       </div>
 
-      <button class="button small">Generate</button>
+      <!-- Save to Draft Button -->
+      <button class="button small save-draft-button" style="display: block; margin-bottom: 10px;">Save to Draft</button>
+
+      <!-- Delete Draft Button -->
+      <button type="button" class="button small delete-draft-button" style="display: block; margin-bottom: 10px;">Delete Draft</button>
+
+      <!-- Generate Button -->
+      <button class="button small generate-button">Generate</button>
     </form>
   </div>
 
