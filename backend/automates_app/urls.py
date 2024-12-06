@@ -1,32 +1,6 @@
-"""
-URL configuration for Automates project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-
-
-from django.urls import path
-from . import views
-
-urlpatterns = [
-    path('', views.home,name="home"),
-    path('signup', views.signup, name="signup"),
-    path('login', views.login, name="login"),
-    path('logout', views.logout, name="logout"),
-]   
-"""
 from django.urls import path, include
 from .views import home, authView, accounts, delete_account, githubAuth, fetchUserRepos, github_callback  # Import delete_account view
+from .views import save_draft, list_drafts, load_draft, delete_draft
 
 urlpatterns = [
     path("", home, name="home"),
@@ -39,4 +13,8 @@ urlpatterns = [
     path('auth/', githubAuth, name='github_authenticate'),
     path('repos/', fetchUserRepos, name='fetch_user_repos'),
     path('callback/', github_callback, name='github_callback'),    
+    path("save_draft/", save_draft, name="save_draft"),
+    path("list_drafts/", list_drafts, name="list_drafts"),
+    path("load_draft/<int:draft_id>/", load_draft, name="load_draft"),
+    path('delete_draft/<int:draft_id>/', delete_draft, name='delete_draft'),
 ]

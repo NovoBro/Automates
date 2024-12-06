@@ -1,74 +1,3 @@
-'''from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from django.contrib import messages
-from django.contrib.auth import logout as auth_logout
-
-# Home page view
-def home(request):
-    return render(request, "automates_app/home.html")
-
-# Sign up page view
-def signup(request):
-    if request.method == "POST":
-        username = request.POST['username']
-        fname = request.POST['fname']
-        lname = request.POST['lname']
-        password = request.POST['password']
-        repassword = request.POST['repassword']
-        email = request.POST.get('email', '')  # Ensure email field is added in the form
-
-        # Check if the username already exists
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists! Please try some other username")
-            return redirect('signup')  # Redirect to signup page if username exists
-
-        # Check if passwords match
-        if password != repassword:
-            messages.error(request, "Passwords did not match!")
-            return redirect('signup')  # Redirect to signup page if passwords don't match
-
-        # Check if username is alphanumeric
-        if not username.isalnum():
-            messages.error(request, "Username must be alphanumeric!")
-            return redirect('signup')  # Redirect to signup page if username is invalid
-
-        # Create new user
-        myuser = User.objects.create_user(username=username, email=email, password=password)
-        myuser.first_name = fname
-        myuser.last_name = lname
-        myuser.save()
-
-        messages.success(request, "Your account has been successfully created.")
-        
-        return redirect('login')  # Redirect to login page after successful signup
-
-    return render(request, "automates_app/signup.html")
-
-# Login page view
-def login(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            messages.success(request, "You have logged in successfully!")
-            return redirect('home')  # Redirect to the home page or any other page
-        else:
-            messages.error(request, "Invalid username or password. Please try again.")
-            return redirect('home')  # Redirect back to the login page if login fails
-
-    return render(request, 'automates_app/signin.html')
-
-# Logout view (log the user out)
-def logout(request):
-    auth_logout(request)  # This will log the user out
-    messages.success(request, "You have been logged out successfully.")
-    return redirect('home')  # Redirect to home page after logout
-'''
-
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
@@ -79,22 +8,22 @@ import random
 import string
 import requests
 from django.conf import settings
+from .models import Draft
 
 
 @login_required
 def home(request):
- return render(request, "home.html", {})
-
+    return render(request, "home.html", {})
 
 def authView(request):
- if request.method == "POST":
-  form = UserCreationForm(request.POST or None)
-  if form.is_valid():
-   form.save()
-   return redirect("automates_app:login")
- else:
-  form = UserCreationForm()
- return render(request, "registration/signup.html", {"form": form})
+    if request.method == "POST":
+        form = UserCreationForm(request.POST or None)
+        if form.is_valid():
+            form.save()
+            return redirect("automates_app:login")
+    else:
+        form = UserCreationForm()
+    return render(request, "registration/signup.html", {"form": form})
 
 def delete_account(request):
     if request.method == "POST":
@@ -220,3 +149,57 @@ def github_callback(request):
     redirect_url = f"{settings.FRONTEND_REDIRECT_URI}?token={access_token}"
 
     return HttpResponseRedirect(redirect_url)
+def save_draft(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        audience = request.POST.get('audience')
+        style = request.POST.get('style')
+        tone = request.POST.get('tone')
+        hashtags = request.POST.get('hashtags')
+
+        # Save draft to the database
+        draft = Draft.objects.create(
+            name=name,
+            description=description,
+            audience=audience,
+            style=style,
+            tone=tone,
+            hashtags=hashtags,
+            user=request.user  # Associate draft with the current user
+        )
+
+        return JsonResponse({"success": True})
+    return JsonResponse({"success": False})
+@login_required
+def list_drafts(request):
+    drafts = Draft.objects.filter(user=request.user).order_by("-created_at")
+    drafts_data = drafts.values("id", "name")  # Only sending the id and name to reduce payload size
+    return JsonResponse({"drafts": list(drafts_data)})
+
+@login_required
+def load_draft(request, draft_id):
+    try:
+        draft = Draft.objects.get(id=draft_id, user=request.user)  # Make sure we fetch drafts for the current user only
+        draft_data = {
+            "success": True,
+            "draft": {
+                "name": draft.name,
+                "description": draft.description,
+                "audience": draft.audience,
+                "style": draft.style,
+                "tone": draft.tone,
+                "hashtags": draft.hashtags,
+            },
+        }
+        return JsonResponse(draft_data)
+    except Draft.DoesNotExist:
+        return JsonResponse({"success": False, "message": "Draft not found."}, status=404)
+
+def delete_draft(request, draft_id):
+    try:
+        draft = Draft.objects.get(id=draft_id, user=request.user)  # Ensure the draft belongs to the current user
+        draft.delete()  # Delete the draft
+        return JsonResponse({'success': True, 'message': 'Draft deleted successfully.'})
+    except Draft.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Draft not found.'}, status=404)
