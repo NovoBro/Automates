@@ -151,3 +151,56 @@ handleToneChange();
 audienceDrop.addEventListener("change", handleAudienceChange);
 styleDrop.addEventListener("change", handleStyleChange);
 toneDrop.addEventListener("change", handleToneChange);
+
+async function generateDescription(data) {
+    const apiUrl = '../../backend/GitHubApi/urls/generate-description/';
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', // Django expects form data
+            },
+            body: new URLSearchParams(data), // Convert the data object to URL-encoded string
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Generated Description:', result.description);
+            document.getElementById('descriptionOutput').textContent = result.description; // Display result
+        } else {
+            console.error('Error generating description:', response.status);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+generateButton.addEventListener("click", function () {
+  settings = [];
+  description = document.getElementById("description").value;
+  hashtags = document.getElementById("hashtags").value;
+  var a = audience;
+  var s  = style;
+  var t = tone;
+  if(audience === "Other"){
+    a = audienceOther;
+  }
+  if(style === "Other"){
+    s = styleOther;
+  }
+  if(tone === "Other"){
+    t = toneOther;
+  }
+  const formData = {
+    repoLink: repository,
+    userDescription: description,
+    audience: a,
+    tone: t,
+    style: s,
+    hashtags: hashtags,
+  };
+  settings.push(description, a, s, t, hashtags);
+  generateDescription(formData);
+  console.log(settings);
+});
