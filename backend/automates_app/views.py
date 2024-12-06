@@ -8,7 +8,7 @@ import random
 import string
 import requests
 from django.conf import settings
-from .models import Draft
+from .models import Draft, UserToken
 
 
 @login_required
@@ -96,9 +96,6 @@ class GitHubAPI():
     
     
     def get_access_token(code, state, request):
-        if state != request.session.get('github_state'):
-            return {"error": "Invalid State"}
-        
         token_url = "https://github.com/login/oauth/access_token"
         headers =  {
             'Accept': 'application/json'
@@ -109,8 +106,12 @@ class GitHubAPI():
         'code': code,
         'redirect_uri': settings.GITHUB_REDIRECT_URI,
         }
-        
+        print(f"Requesting access token with code: {code}")
+        print(f"Headers: {headers}")
+        print(f"Data: {data}")    
         response = requests.post(token_url, headers=headers, data=data)
+        print(f"Token exchange response status: {response.status_code}")
+        print(f"Token exchange response body: {response.text}")
         if response.status_code == 200:
             token_data = response.json()
             access_token = token_data.get('access_token')
@@ -133,8 +134,9 @@ def github_callback(request):
     code = request.GET.get('code')
     state = request.GET.get('state')
 
-    session_state = request.session.get('github_state')
+    session_state = request.session.pop('github_state', None)
     
+    #Troubleshooting
     print(f"Github state: {state}")
     print(f"Session State: {session_state}")
     
@@ -145,10 +147,16 @@ def github_callback(request):
     result = GitHubAPI.get_access_token(code, state, request)
     if "error" in result:
         return JsonResponse(result, status=400)
+    
     access_token = result.get('access_token')
+    user = request.user
+    user_token, created = UserToken.objects.get_or_create(user=user)
+    user_token.token = access_token
+    user_token.save()
     redirect_url = f"{settings.FRONTEND_REDIRECT_URI}?token={access_token}"
 
     return HttpResponseRedirect(redirect_url)
+
 def save_draft(request):
     if request.method == "POST":
         name = request.POST.get('name')

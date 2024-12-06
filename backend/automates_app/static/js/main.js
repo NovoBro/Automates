@@ -131,41 +131,50 @@ document.addEventListener("DOMContentLoaded", function () {
     //     {"name": "test repo 2", "date created": "1986-12-14", "description": "qwerty"}
     //   ]
     // }`;
+
     async function fetchRepositories() {
       try {
           const grabToken = new URLSearchParams(window.location.search);
           const token = grabToken.get('token');
-          const response = await fetch(`/api/user-repos/?token=${token}`);
-          
+  
+          if (!token) {
+              console.error("Authorization token is missing");
+              alert("Token not found in URL. Please log in.");
+              return;
+          }
+  
+          const response = await fetch(`/repos/?token=${token}`);
+  
           if (!response.ok) {
               throw new Error(`Error fetching repositories: ${response.status}`);
           }
-
+  
           const repositories = await response.json();
           console.log("Fetched repositories:", repositories);
-
+  
+          const btnGroup = document.querySelector('.btn-group');
           if (btnGroup) {
               btnGroup.innerHTML = '';
           }
-
+  
           let activeButton = null;
-
+  
           repositories.forEach(repo => {
               const button = document.createElement('button');
               button.textContent = repo.name;
-
+  
               button.addEventListener('click', function () {
                   if (activeButton) {
                       activeButton.style.backgroundColor = '';
                   }
-
-                  button.style.backgroundColor = "#2d343c";
+  
+                  button.style.backgroundColor = "#2d343c"; 
                   activeButton = button;
-
+  
                   console.log("Current repository:", repo);
                   alert(`Description: ${repo.description}`);
               });
-
+  
               if (btnGroup) {
                   btnGroup.appendChild(button);
               }
@@ -173,9 +182,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } catch (error) {
           console.error("Error fetching repositories:", error);
       }
-  }
-
-  fetchRepositories();
+    }
   
     const obj = JSON.parse(text);
     const repositories = obj.repositories; // Extract the repositories array
