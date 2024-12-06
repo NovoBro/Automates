@@ -6,9 +6,9 @@
     <h1>Account</h1>
 
     <div class="btn-group">
-      <button class="button button1">Connect to GitHub</button>
+      <button class="button button1" onclick="window.location.href='{% url 'automates_app:github_authenticate' %}'">Github Authenticate</button>
       <button class="button button1">Connect to LinkedIn</button>
-
+      
       <!-- Delete Account Form with Confirmation -->
       <form id="deleteForm" method="POST" action="{% url 'automates_app:delete_account' %}">
         {% csrf_token %}

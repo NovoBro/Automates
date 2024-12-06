@@ -92,15 +92,60 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   
     // Sample JSON for repositories (for generating repository buttons)
-    var text = `{
-      "repositories": [
-        {"name": "Ballistic missile", "date created": "1986-12-14", "description": "Fun for the whole family!"},
-        {"name": "Test repo", "date created": "1986-12-14", "description": "description100!"},
-        {"name": "I can't believe it's not butter!", "date created": "1986-12-14", "description": "Friday"},
-        {"name": "Super Computer Sim", "date created": "1986-12-14", "description": "holy mackeral"},
-        {"name": "test repo 2", "date created": "1986-12-14", "description": "qwerty"}
-      ]
-    }`;
+    // var text = `{
+    //   "repositories": [
+    //     {"name": "Ballistic missile", "date created": "1986-12-14", "description": "Fun for the whole family!"},
+    //     {"name": "Test repo", "date created": "1986-12-14", "description": "description100!"},
+    //     {"name": "I can't believe it's not butter!", "date created": "1986-12-14", "description": "Friday"},
+    //     {"name": "Super Computer Sim", "date created": "1986-12-14", "description": "holy mackeral"},
+    //     {"name": "test repo 2", "date created": "1986-12-14", "description": "qwerty"}
+    //   ]
+    // }`;
+    async function fetchRepositories() {
+      try {
+          const grabToken = new URLSearchParams(window.location.search);
+          const token = grabToken.get('token');
+          const response = await fetch(`/api/user-repos/?token=${token}`);
+          
+          if (!response.ok) {
+              throw new Error(`Error fetching repositories: ${response.status}`);
+          }
+
+          const repositories = await response.json();
+          console.log("Fetched repositories:", repositories);
+
+          if (btnGroup) {
+              btnGroup.innerHTML = '';
+          }
+
+          let activeButton = null;
+
+          repositories.forEach(repo => {
+              const button = document.createElement('button');
+              button.textContent = repo.name;
+
+              button.addEventListener('click', function () {
+                  if (activeButton) {
+                      activeButton.style.backgroundColor = '';
+                  }
+
+                  button.style.backgroundColor = "#2d343c";
+                  activeButton = button;
+
+                  console.log("Current repository:", repo);
+                  alert(`Description: ${repo.description}`);
+              });
+
+              if (btnGroup) {
+                  btnGroup.appendChild(button);
+              }
+          });
+      } catch (error) {
+          console.error("Error fetching repositories:", error);
+      }
+  }
+
+  fetchRepositories();
   
     const obj = JSON.parse(text);
     const repositories = obj.repositories; // Extract the repositories array
