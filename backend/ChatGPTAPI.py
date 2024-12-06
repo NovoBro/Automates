@@ -1,7 +1,8 @@
 import openai
 import os
+from django.conf import settings
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = settings.CHAT_GPT_API_KEY
 
 class ChatGPTAPI():
     def generateDescription(self, userprompt):
