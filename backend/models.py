@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 from ChatGPTAPI import ChatGPTAPI
-from backend.GitHubApi.views import GitHubAPI
 
 class Draft(models.Model):
   repositoryLink = models.URLField(max_length=255)
@@ -129,27 +128,12 @@ class UserProfile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
   drafts = models.OneToManyField(Draft, blank=True, related_name="user_profiles")
   posts = models.OneToManyField(Post, blank=True, related_name="user_profiles")
-  linkedInAccess = models.CharField(max_length=255)
-  githubAccess = models.CharField(max_length=255)
-  username = models.CharField(max_length=150, unique=True)
-  gitHubAccess = GitHubAPI()
-  def authenticateGithub(self):
-    # to be implemented
-    return
-
-  def refreshGithubAccess(self):
-    # to be implemented
-    return
 
   def getDrafts(self):
     return self.drafts.all()
 
   def getPosts(self):
     return self.posts.all()
-
-  def getRepositories(self):
-    # to be implemented
-    return
 
   def addDraft(self, draft):
     self.drafts.add(draft)
