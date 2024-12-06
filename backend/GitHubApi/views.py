@@ -15,7 +15,9 @@ class GitHubAPI():
         state = ''.join(random.choices(string.ascii_letters + string.digits, k=16))
         #stores state for validation for each session
         request.session['github_state'] = state 
+        request.session.save()
         
+        print(f"Generated state:{state}")
         github_auth_url = (
             #string literal to generate the url for authentication
             f"https://github.com/login/oauth/authorize?client_id={client_id}"
@@ -28,12 +30,12 @@ class GitHubAPI():
         #defines headers
         headers = {
             'Accept': 'application/vnd.github+json',
-            'Authorization': 'Bearer <auth_token>',
+            'Authorization': f'Bearer {auth_token}',
             'X-GitHub-Api-Version': '2022-11-28',
         }
 
         #retrieves response from api call
-        response = requests.get('https://api.github.com/user/repos', headers = headers)
+        response = requests.get('https://api.github.com/user/repos', headers=headers)
 
         #ensures correct status code
         if response.status_code == 200:
@@ -84,7 +86,6 @@ def fetchUserRepos(request):
     auth_token = request.GET.get('token')
     if not auth_token:
         return JsonResponse({"error": "Authorization token is Incorrect"}, status=400)
-    
     repos = GitHubAPI.get_user_repos(auth_token)
     return JsonResponse(repos, safe=False)
 
@@ -92,11 +93,19 @@ def github_callback(request):
     code = request.GET.get('code')
     state = request.GET.get('state')
 
+    session_state = request.session.get('github_state')
+    
+    print(f"Github state: {state}")
+    print(f"Session State: {session_state}")
+    
+    if state != session_state:
+        return JsonResponse({"error": "Invalid state"}, status=400)
+    
     # Use the GitHubAPI class to handle the token exchange
     result = GitHubAPI.get_access_token(code, state, request)
     if "error" in result:
         return JsonResponse(result, status=400)
     access_token = result.get('access_token')
-    redirect_url = f"{settings.GITHUB_REDIRECT_URI}?token={access_token}"
+    redirect_url = f"{settings.FRONTEND_REDIRECT_URI}?token={access_token}"
 
     return HttpResponseRedirect(redirect_url)

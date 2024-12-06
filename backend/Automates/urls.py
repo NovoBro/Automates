@@ -46,8 +46,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from GitHubApi.views import githubAuth, fetchUserRepos
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", include(("automates_app.urls", "automates_app"), "automates_app"))
+    path("", include(("automates_app.urls", "automates_app"), "automates_app")),
+    path('github/', include('GitHubApi.urls')),
 ] + static(settings.STATIC_URL)
