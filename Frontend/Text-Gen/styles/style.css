@@ -1,62 +1,77 @@
-/* 
-Font color:    #f0f6fc
-Border color:  #2d343c
-Light gray:    #f0f6fc
-Black:         #010409
-*/
-
-html {
-  font-size: 10px;
+/* Reset styles and base settings */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
   font-family: "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
   color: #f0f6fc;
+  transition: 0.3s all ease-in-out;
 }
 
+/* General body styling */
 html, body {
   margin: 0;
   padding: 0;
-}
-
-h1 {
-  font-size: 30px;
-  text-align: left;
-  font-weight: 600;
-  line-height: 0.75;
-  margin: 30px 0px 30px 20px;
-  color: #f0f6fc;
-}
-
-h2 {
-  font-size: 20px;
-  text-align: center;
-  font-weight: 400;
-  line-height: 1;
-  color: #f0f6fc;
-}
-
-p, li {
-  font-size: 16px;
-  line-height: 2;
-  letter-spacing: 1px;
-}
-
-
-html {
   background-color: #0d1117;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-size: 1.6rem; /* Adjust font size for better scaling */
+  line-height: 1.6;
 }
 
-.brand {
-  height: 20px;
-  margin: 0px auto;
+/* Header styling */
+header {
   background-color: #010409;
-  padding: 50px 0 50px 0;
+  color: #f0f6fc;
+  text-align: center;
+  padding: 20px 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
   border-bottom: 1px solid #2d343c;
 }
 
-img {
-  display: block;
-  margin: 0 auto;
+header h1 {
+  font-size: 3.5rem;
+  font-weight: 600;
+  line-height: 0.75;
+  margin: 0;
 }
 
+header h2 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0;
+  line-height: 1;
+}
+
+/* Main content */
+main {
+  padding: 120px 20px 20px; /* Padding to avoid overlap with fixed header */
+  text-align: center;
+  flex-grow: 1;
+}
+
+/* Footer styling */
+footer {
+  background-color: #010409;
+  color: #f0f6fc;
+  text-align: center;
+  padding: 15px;
+  font-size: 1.4rem;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  border-top: 1px solid #2d343c;
+}
+
+footer p {
+  margin: 0;
+}
+
+/* Buttons */
 .button {
   border: 1px solid #2d343c;
   border-radius: 8px;
@@ -65,10 +80,11 @@ img {
   padding: 16px 32px;
   text-align: center;
   text-decoration: none;
-  display: block;
+  display: inline-block;
   font-size: 16px;
   transition-duration: 0.4s;
   cursor: pointer;
+  margin: 10px;
 }
 
 .button:hover {
@@ -80,7 +96,7 @@ img {
   margin: 30px auto 140px;
 }
 
-.button2{
+.button2 {
   border-radius: 100px;
   padding: 15px 24px;
   font-size: 25px;
@@ -89,7 +105,8 @@ img {
   margin-bottom: 10px;
 }
 
-.login{
+/* Login button */
+.login {
   position: fixed; 
   top: 0;
   right: 0;
@@ -101,7 +118,8 @@ img {
   margin-top: 10px;
 }
 
-.top{
+/* Fixed header */
+.top {
   width: 100%;
   position: fixed; 
   background-color: #010409;
@@ -109,16 +127,17 @@ img {
   border-bottom: 1px solid #2d343c;
 }
 
-.buffer{
+.buffer {
   height: 55px;
 }
 
-.footer{
+.footer {
   position: fixed; 
   bottom: 0;
   right: 0;
 }
 
+/* Layout for columns */
 .column {
   float: left;
 }
@@ -139,15 +158,31 @@ img {
 }
 
 textarea {
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #0d1117;
+  color: #f0f6fc;
+  border: 1px solid #2d343c;
 }
 
-.selector{
+.selector {
+  margin-bottom: 20px;
 }
 
+/* Generated Text Box */
 .generated {
   width: 99%;
-  height: 100%;
+  height: 150px;
   resize: none;
+  background-color: #0d1117;
+  color: #f0f6fc;
+  border: 1px solid #2d343c;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1.4rem;
+  margin-top: 20px;
+  overflow-y: auto;
 }
 
 .description {
@@ -163,7 +198,7 @@ textarea {
   display: none;
 }
 
-.btn-group{
+.btn-group {
   margin: 0px 50px;
 }
 
@@ -171,10 +206,10 @@ textarea {
   background-color: #010409;
   border: 1px solid #2d343c;
   color: #f0f6fc;
-  padding: 15px 24px 15px 24px;
-  cursor: pointer; /* Pointer/hand icon */
-  width: 50%; /* Set a width if needed */
-  display: block; /* Make the buttons appear below each other */
+  padding: 15px 24px;
+  cursor: pointer;
+  width: 50%;
+  display: block;
   font-size: 20px;
   text-align: left;
   font-weight: 200;
@@ -185,10 +220,47 @@ textarea {
 }
 
 .btn-group button:not(:last-child) {
-  border-bottom: none; /* Prevent double borders */
+  border-bottom: none;
 }
 
-/* Add a background color on hover */
 .btn-group button:hover {
   background-color: #2d343c;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 2.5rem;
+  }
+
+  header h2 {
+    font-size: 1.2rem;
+  }
+
+  .button {
+    font-size: 1.4rem;
+    padding: 10px 20px;
+  }
+
+  .selector h1 {
+    font-size: 1.4rem;
+  }
+
+  textarea.description, .dropdown {
+    font-size: 1.2rem;
+    padding: 8px;
+  }
+
+  .generated {
+    height: 120px;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .left, .right {
+    flex: 1;
+    width: 100%;
+  }
 }

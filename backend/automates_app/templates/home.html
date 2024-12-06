@@ -1,10 +1,11 @@
 {% extends "automates_app.html" %}
-
 {% block content %}
 <!-- Home Page Content -->
 <div class="top">
-  <a href="{% url 'automates_app:logout' %}" class="button login">Logout</a>
-  <button class="button login">Account</button>
+  <a href="{% url 'automates_app:logout' %}" class="button small">Logout</a>
+  <a href="{% url 'automates_app:accounts' %}" class="button small">Account Settings</a> <!-- Updated link to accounts page -->
+  {% load static %}
+  <script src="{% static 'js/main.js' %}" defer></script>
 </div>
 
 <div class="buffer"></div>
@@ -12,7 +13,6 @@
 <div class="row">
   <!-- Left Column (Form Inputs) -->
   <div class="column left">
-    <h1>Select Repository</h1>
     <div class="btn-group"></div>
 
     <form method="POST" action="{% url 'automates_app:home' %}">
@@ -27,9 +27,9 @@
       <div class="selector">
         <h1>Audience</h1>
         <select name="audience" id="audience" class="dropdown">
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
+          <option value="option1">Classmates</option>
+          <option value="option2">Employers</option>
+          <option value="option3">Co-workers</option>
           <option value="other">Other</option>
         </select>
         <textarea id="audienceTextBox" name="audienceTextBox" class="otherBox" rows="1" cols="20"></textarea>
@@ -39,9 +39,9 @@
       <div class="selector">
         <h1>Style</h1>
         <select name="style" id="style" class="dropdown">
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
+          <option value="option1">Professional</option>
+          <option value="option2">Academic</option>
+          <option value="option3">Corporate</option>
           <option value="other">Other</option>
         </select>
         <textarea id="styleTextBox" name="styleTextBox" class="otherBox" rows="1" cols="20"></textarea>
@@ -51,9 +51,9 @@
       <div class="selector">
         <h1>Tone</h1>
         <select name="tone" id="tone" class="dropdown">
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
+          <option value="option1">Formal</option>
+          <option value="option2">Friendly</option>
+          <option value="option3">Casual</option>
           <option value="other">Other</option>
         </select>
         <textarea id="toneTextBox" name="toneTextBox" class="otherBox" rows="1" cols="20"></textarea>
@@ -65,7 +65,7 @@
         <textarea id="hashtags" name="hashtags" class="description" rows="5" cols="50">Enter hashtags here.</textarea>
       </div>
 
-      <button class="button button1">Generate</button>
+      <button class="button small">Generate</button>
     </form>
   </div>
 
@@ -76,3 +76,4 @@
 </div>
 
 {% endblock content %}
+
