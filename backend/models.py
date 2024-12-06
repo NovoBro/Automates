@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
+from ChatGPTAPI import ChatGPTAPI
+from backend.GitHubApi.views import GitHubAPI
 
 class Draft(models.Model):
   repositoryLink = models.URLField(max_length=255)
@@ -31,7 +33,7 @@ class Draft(models.Model):
 
   def setAudience(self, audience):
     self.postAudience = audience
-    seld.save()
+    self.save()
 
   def getAudience(self):
     return self.postAudience
@@ -76,7 +78,7 @@ class Draft(models.Model):
 
   def setDescription(self):
     self.setPrompt()
-    self.generatedDescription = aiAccess.generateDescription(self.getPrompt())
+    self.generatedDescription = self.aiAccess.generateDescription(self.getPrompt())
     self.save()
     
   def getDescription(self):
@@ -85,7 +87,16 @@ class Draft(models.Model):
   def validatePostCompletion(self):
     return bool(self.respositoryLink and (self.generatedDescription or self.userDescription))
 
-  def saveDraft(self):
+  def saveDraft(self, repoLink, userDescription, audience, tone, style, hashtags):
+    self.setRepoLink(repoLink)
+    self.setUserDescription(userDescription)
+    self.setAudience(audience)
+    self.setTone(tone)
+    self.setStyle(style)
+    self.setHastags(hashtags)
+    self.setDateAndTime()
+    self.setPrompt()
+    self.setDescription()
     self.save()
 
 class Post(models.Model):
@@ -121,20 +132,14 @@ class UserProfile(models.Model):
   linkedInAccess = models.CharField(max_length=255)
   githubAccess = models.CharField(max_length=255)
   username = models.CharField(max_length=150, unique=True)
-  linkedInAccess = LinkedInAPI()
   gitHubAccess = GitHubAPI()
-
-  def authenticateLinkedIn(self):
-    # to be implemented
-
   def authenticateGithub(self):
     # to be implemented
-
-  def refreshLinkedInAccess(self):
-    # to be implemented
+    return
 
   def refreshGithubAccess(self):
     # to be implemented
+    return
 
   def getDrafts(self):
     return self.drafts.all()
@@ -144,6 +149,7 @@ class UserProfile(models.Model):
 
   def getRepositories(self):
     # to be implemented
+    return
 
   def addDraft(self, draft):
     self.drafts.add(draft)
@@ -154,13 +160,3 @@ class UserProfile(models.Model):
   def removeDraft(self, draft):
     self.drafts.remove(draft)
 
-  def postToLinkedIn(self, draft):
-    post = Post()
-    post.fillFromDraft(draft)
-    if linkedInAccess.postToLinkedIn(post):
-      self.addPost(post)
-      self.removeDraft(draft)
-      self.save()
-      return True
-    else:
-      return False
