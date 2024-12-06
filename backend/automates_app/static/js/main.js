@@ -1,6 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Script loaded");
 
+    // Utility: Get CSRF Token - Define the function here first
+    function getCSRFToken() {
+        return document.querySelector("[name=csrfmiddlewaretoken]").value;
+    }
+
     // Get form elements
     const saveButton = document.querySelector(".save-draft-button");
     const generateButton = document.querySelector(".generate-button");
@@ -68,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
-                    "X-CSRFToken": getCSRFToken(),
+                    "X-CSRFToken": getCSRFToken(), // Use the defined getCSRFToken function
                 },
                 body: new URLSearchParams({
                     name: draftName,
@@ -120,79 +125,6 @@ document.addEventListener("DOMContentLoaded", function () {
             saveDraft(generatedText, draftName);
         });
     }
-  
-    // Sample JSON for repositories (for generating repository buttons)
-    // var text = `{
-    //   "repositories": [
-    //     {"name": "Ballistic missile", "date created": "1986-12-14", "description": "Fun for the whole family!"},
-    //     {"name": "Test repo", "date created": "1986-12-14", "description": "description100!"},
-    //     {"name": "I can't believe it's not butter!", "date created": "1986-12-14", "description": "Friday"},
-    //     {"name": "Super Computer Sim", "date created": "1986-12-14", "description": "holy mackeral"},
-    //     {"name": "test repo 2", "date created": "1986-12-14", "description": "qwerty"}
-    //   ]
-    // }`;
-
-    async function fetchRepositories() {
-      try {
-          const grabToken = new URLSearchParams(window.location.search);
-          const token = grabToken.get('token');
-  
-          if (!token) {
-              console.error("Authorization token is missing");
-              alert("Token not found in URL. Please log in.");
-              return;
-          }
-  
-          const response = await fetch(`/repos/?token=${token}`);
-  
-          if (!response.ok) {
-              throw new Error(`Error fetching repositories: ${response.status}`);
-          }
-  
-          const repositories = await response.json();
-          console.log("Fetched repositories:", repositories);
-  
-          const btnGroup = document.querySelector('.btn-group');
-          if (btnGroup) {
-              btnGroup.innerHTML = '';
-          }
-  
-          let activeButton = null;
-  
-          repositories.forEach(repo => {
-              const button = document.createElement('button');
-              button.textContent = repo.name;
-  
-              button.addEventListener('click', function () {
-                  if (activeButton) {
-                      activeButton.style.backgroundColor = '';
-                  }
-  
-                  button.style.backgroundColor = "#2d343c"; 
-                  activeButton = button;
-  
-                  console.log("Current repository:", repo);
-                  alert(`Description: ${repo.description}`);
-              });
-  
-              if (btnGroup) {
-                  btnGroup.appendChild(button);
-              }
-          });
-      } catch (error) {
-          console.error("Error fetching repositories:", error);
-      }
-    }
-  
-    const obj = JSON.parse(text);
-    const repositories = obj.repositories; // Extract the repositories array
-  
-    // Select the button group container
-    const btnGroup = document.querySelector('.btn-group');
-  
-    // Remove any existing button(s) to start fresh
-    if (btnGroup) {
-      btnGroup.innerHTML = '';
 
     // Function to save generated text as a draft
     function saveDraft(generatedText, draftName) {
@@ -223,35 +155,6 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch((error) => {
             console.error("Error saving draft:", error);
             alert("Failed to save draft.");
-        });
-    }
-
-    // Handle delete draft functionality
-    if (deleteButton) {
-        deleteButton.addEventListener("click", function () {
-            if (!selectedDraftId) {
-                alert("No draft selected to delete.");
-                return;
-            }
-
-            // Confirm the deletion
-            if (confirm("Are you sure you want to delete this draft?")) {
-                fetch(`/delete_draft/${selectedDraftId}/`, {
-                    method: "DELETE",
-                    headers: {
-                        "X-CSRFToken": getCSRFToken(),
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("Draft deleted successfully!");
-                        loadDrafts(); // Refresh the draft list
-                    } else {
-                        alert("Failed to delete draft.");
-                    }
-                });
-            }
         });
     }
 
@@ -286,31 +189,118 @@ document.addEventListener("DOMContentLoaded", function () {
                     document.getElementById("style").value = draft.style;
                     document.getElementById("tone").value = draft.tone;
                     document.getElementById("hashtags").value = draft.hashtags;
-
-                    // If the field is saved as "Other," populate the textbox
-                    if (draft.audience === "other") {
-                        audienceTextBox.value = "";
-                    }
-                    if (draft.style === "other") {
-                        styleTextBox.value = "";
-                    }
-                    if (draft.tone === "other") {
-                        toneTextBox.value = "";
-                    }
-
-                    // Re-enable the textbox if "Other" is selected
-                    toggleTextbox();
                 } else {
                     alert("Failed to load draft.");
                 }
             });
     }
 
-    // Utility: Get CSRF Token
-    function getCSRFToken() {
-        return document.querySelector("[name=csrfmiddlewaretoken]").value;
+    // Handle delete draft functionality
+    if (deleteButton) {
+        deleteButton.addEventListener("click", function () {
+            if (!selectedDraftId) {
+                alert("No draft selected to delete.");
+                return;
+            }
+
+            // Confirm the deletion
+            if (confirm("Are you sure you want to delete this draft?")) {
+                fetch(`/delete_draft/${selectedDraftId}/`, {
+                    method: "DELETE",
+                    headers: {
+                        "X-CSRFToken": getCSRFToken(),
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Draft deleted successfully!");
+                        loadDrafts(); // Refresh the draft list
+                    } else {
+                        alert("Failed to delete draft.");
+                    }
+                });
+            }
+        });
     }
 
     // Load drafts on page load
     loadDrafts();
-}});
+
+        // Sample JSON for repositories (for generating repository buttons)
+        var text = {
+            "repositories": [
+                {"name": "Ballistic missile", "date created": "1986-12-14", "description": "Fun for the whole family!"},
+                {"name": "Test repo", "date created": "1986-12-14", "description": "description100!"},
+                {"name": "I can't believe it's not butter!", "date created": "1986-12-14", "description": "Friday"},
+                {"name": "Super Computer Sim", "date created": "1986-12-14", "description": "holy mackeral"},
+                {"name": "test repo 2", "date created": "1986-12-14", "description": "qwerty"}
+            ]
+        };
+        
+    
+        async function fetchRepositories() {
+          try {
+              const grabToken = new URLSearchParams(window.location.search);
+              const token = grabToken.get('token');
+      
+              if (!token) {
+                  console.error("Authorization token is missing");
+                  alert("Token not found in URL. Please log in.");
+                  return;
+              }
+      
+              const response = await fetch(`/repos/?token=${token}`);
+      
+              if (!response.ok) {
+                  throw new Error(`Error fetching repositories: ${response.status}`);
+              }
+      
+              const repositories = await response.json();
+              console.log("Fetched repositories:", repositories);
+      
+              const btnGroup = document.querySelector('.btn-group');
+              if (btnGroup) {
+                  btnGroup.innerHTML = '';
+              }
+      
+              let activeButton = null;
+      
+              repositories.forEach(repo => {
+                  const button = document.createElement('button');
+                  button.textContent = repo.name;
+      
+                  button.addEventListener('click', function () {
+                      if (activeButton) {
+                          activeButton.style.backgroundColor = '';
+                      }
+      
+                      button.style.backgroundColor = "#2d343c"; 
+                      activeButton = button;
+      
+                      console.log("Current repository:", repo);
+                      alert(`Description: ${repo.description}`);
+                  });
+      
+                  if (btnGroup) {
+                      btnGroup.appendChild(button);
+                  }
+              });
+          } catch (error) {
+              console.error("Error fetching repositories:", error);
+          }
+        }
+      
+    
+        const repositories = text.repositories; // Extract the repositories array
+      
+        // Select the button group container
+        const btnGroup = document.querySelector('.btn-group');
+      
+        // Remove any existing button(s) to start fresh
+        if (btnGroup) {
+          btnGroup.innerHTML = '';
+        }
+});
+
+
