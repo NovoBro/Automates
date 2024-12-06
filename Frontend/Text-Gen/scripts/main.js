@@ -123,7 +123,7 @@ styleDrop.addEventListener("change", handleStyleChange);
 toneDrop.addEventListener("change", handleToneChange);
 
 async function generateDescription(data) {
-    const apiUrl = '../../backend/GitHubApi/urls/generate-description/';
+    const apiUrl = '../../backend/urls/generate-description/';
 
     try {
         const response = await fetch(apiUrl, {
