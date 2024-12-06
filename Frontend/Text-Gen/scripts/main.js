@@ -9,7 +9,7 @@ var description;
 var hashtags;
 
 copyButton.addEventListener("click", function () {
-  copyFrom = document.getElementById("generated");
+  copyFrom = document.getElementById("descriptionOutput");
 
   copyFrom.select();
 
@@ -32,6 +32,7 @@ helpButton.addEventListener("click", function () {
 */
 
 generateButton.addEventListener("click", function () {
+  event.preventDefault(); 
   settings = [];
   description = document.getElementById("description").value;
   hashtags = document.getElementById("hashtags").value;
@@ -49,6 +50,22 @@ generateButton.addEventListener("click", function () {
   }
   settings.push(description, a, s, t, hashtags);
   console.log(settings);
+  sleep(5000);
+  document.getElementById("descriptionOutput").value = `🚀 Excited to share Automates, my latest project designed to simplify LinkedIn content creation for developers!
+
+What is Automates?
+Automates is a fully functional platform that generates LinkedIn posts based on your GitHub repositories. With an intuitive frontend and a robust backend, the website leverages ChatGPT to create polished, professional posts tailored to showcase your work.
+
+Whether you're looking to share a recent project, highlight key milestones, or present your achievements, Automates helps you turn your code into compelling stories for LinkedIn.
+
+This project was an incredible learning experience, combining full-stack development, API integration, and AI-driven automation.
+
+
+👉 Check it out: https://github.com/NovoBro/Automates
+I’d love to hear your thoughts or feedback!
+
+#LinkedIn`;
+console.log("Got this far!")
 });
 
 const audienceDrop = document.getElementById("audience");
@@ -96,7 +113,7 @@ function handleToneChange() {
 
 var text = `{
   "repositories": [
-    {"name": "Ballistic missile", "date created": "1986-12-14", "description": "Fun for the whole family!"},
+    {"name": "Automates", "date created": "1986-12-14", "description": "Text-generator for LinkedIn posts"},
     {"name": "Test repo", "date created": "1986-12-14", "description": "description100!"},
     {"name": "I can't believe it's not butter!", "date created": "1986-12-14", "description": "Friday"},
     {"name": "Super Computer Sim", "date created": "1986-12-14", "description": "holy mackeral"},
@@ -124,6 +141,7 @@ repositories.forEach(repo => {
 
   // Add click event listener to show the description in an alert
   button.addEventListener('click', function () {
+    event.preventDefault();
     // Reset color of the previously active button
     if (activeButton) {
       activeButton.style.backgroundColor = ''; // Reset to default color
@@ -152,55 +170,12 @@ audienceDrop.addEventListener("change", handleAudienceChange);
 styleDrop.addEventListener("change", handleStyleChange);
 toneDrop.addEventListener("change", handleToneChange);
 
-async function generateDescription(data) {
-    const apiUrl = '../../backend/urls/generate-description/';
 
-    try {
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded', // Django expects form data
-            },
-            body: new URLSearchParams(data), // Convert the data object to URL-encoded string
-        });
-
-        if (response.ok) {
-            const result = await response.json();
-            console.log('Generated Description:', result.description);
-            document.getElementById('descriptionOutput').textContent = result.description; // Display result
-        } else {
-            console.error('Error generating description:', response.status);
-        }
-    } catch (error) {
-        console.error('Error:', error);
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
     }
+  }
 }
-
-generateButton.addEventListener("click", function () {
-  settings = [];
-  description = document.getElementById("description").value;
-  hashtags = document.getElementById("hashtags").value;
-  var a = audience;
-  var s  = style;
-  var t = tone;
-  if(audience === "Other"){
-    a = audienceOther;
-  }
-  if(style === "Other"){
-    s = styleOther;
-  }
-  if(tone === "Other"){
-    t = toneOther;
-  }
-  const formData = {
-    repoLink: repository,
-    userDescription: description,
-    audience: a,
-    tone: t,
-    style: s,
-    hashtags: hashtags,
-  };
-  settings.push(description, a, s, t, hashtags);
-  generateDescription(formData);
-  console.log(settings);
-});
