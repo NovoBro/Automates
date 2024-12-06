@@ -101,6 +101,18 @@ img {
   margin-top: 10px;
 }
 
+.copyButton{
+  border-top-right-radius: 0px;
+  border-top-left-radius: 0px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: 10px 15px;
+  font-size: 12px;
+  font-weight: 10;
+  margin-right: 9px;
+  margin-top: 10px;
+}
+
 .top{
   width: 100%;
   position: fixed; 

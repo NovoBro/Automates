@@ -1,8 +1,24 @@
 console.log("Script loaded");
 
-const newButton = document.querySelector("button.button1");
 const accountButton = document.querySelector("button.login");
 const helpButton = document.querySelector("button.button2");
+const generateButton = document.querySelector("button.button1");
+const copyButton = document.querySelector("button.copyButton");
+var settings = [];
+var description;
+var hashtags;
+
+copyButton.addEventListener("click", function () {
+  copyFrom = document.getElementById("generated");
+
+  copyFrom.select();
+
+  navigator.clipboard.writeText(copyFrom.value);
+
+  document.getSelection().collapseToEnd();
+
+  alert("Copied to Clipboard!");
+});
 
 accountButton.addEventListener("click", function () {
   window.open(
@@ -15,25 +31,43 @@ helpButton.addEventListener("click", function () {
 });
 */
 
+generateButton.addEventListener("click", function () {
+  settings = [];
+  description = document.getElementById("description").value;
+  hashtags = document.getElementById("hashtags").value;
+  var a = audience;
+  var s  = style;
+  var t = tone;
+  if(audience === "Other"){
+    a = audienceOther;
+  }
+  if(style === "Other"){
+    s = styleOther;
+  }
+  if(tone === "Other"){
+    t = toneOther;
+  }
+  settings.push(description, a, s, t, hashtags);
+  console.log(settings);
+});
+
 const audienceDrop = document.getElementById("audience");
 var audience;
-var audienceOther = document.getElementById("audienceTextBox");
+var audienceOther = document.getElementById("audienceTextBox").value;
 const styleDrop = document.getElementById("style");
 var style;
-var audienceOther = document.getElementById("styleTextBox");
+var styleOther = document.getElementById("styleTextBox").value;
 const toneDrop = document.getElementById("tone");
 var tone;
-var toneOther = document.getElementById("toneTextBox");
+var toneOther = document.getElementById("toneTextBox").value;
 
 function handleAudienceChange() {
   audience = audienceDrop.options[audienceDrop.selectedIndex].text;
   console.log("Selected audience:", audience);
   
   if (audience === "Other") {
-    console.log("Display");
     audienceTextBox.style.display = "block";
   } else {
-    console.log("Hide");
     audienceTextBox.style.display = "none";
   }
 }
@@ -43,10 +77,8 @@ function handleStyleChange() {
   console.log("Selected style:", style);
   
   if (style === "Other") {
-    console.log("Display");
     styleTextBox.style.display = "block";
   } else {
-    console.log("Hide");
     styleTextBox.style.display = "none";
   }
 }
@@ -56,10 +88,8 @@ function handleToneChange() {
   console.log("Selected tone:", tone);
   
   if (tone === "Other") {
-    console.log("Display");
     toneTextBox.style.display = "block";
   } else {
-    console.log("Hide");
     toneTextBox.style.display = "none";
   }
 }
