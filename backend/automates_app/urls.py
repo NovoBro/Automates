@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .views import home, authView, accounts, delete_account, githubAuth, fetchUserRepos, github_callback  # Import delete_account view
-from .views import save_draft, list_drafts, load_draft, delete_draft, generate_description
+from .views import save_draft, list_drafts, load_draft, delete_draft, generate_description, fetch_readme_view, fetch_username
 
 urlpatterns = [
     path("", home, name="home"),
@@ -18,4 +18,6 @@ urlpatterns = [
     path("list_drafts/", list_drafts, name="list_drafts"),
     path("load_draft/<int:draft_id>/", load_draft, name="load_draft"),
     path('delete_draft/<int:draft_id>/', delete_draft, name='delete_draft'),
+    path('fetch_readme/<str:owner>/<str:repo_name>/', fetch_readme_view, name='fetch_readme_content'),
+    path("fetch_username/", fetch_username, name="fetch_username"),
 ]
