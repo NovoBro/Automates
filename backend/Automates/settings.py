@@ -34,7 +34,8 @@ GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
 GITHUB_REDIRECT_URI = 'http://localhost:8000/callback/'
 FRONTEND_REDIRECT_URI = 'http://localhost:8000/accounts/custom/'
 
-
+#ChatGpt Key
+CHAT_GPT_API_KEY = os.getenv("CHAT_GPT_API_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
