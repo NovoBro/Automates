@@ -22,6 +22,7 @@ class Draft(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    generated_description = models.TextField(default="")
 
     def __str__(self):
         return self.name

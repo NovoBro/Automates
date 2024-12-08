@@ -160,28 +160,39 @@ def github_callback(request):
 
     return HttpResponseRedirect(redirect_url)
 
+@login_required
 def save_draft(request):
-    if request.method == "POST":
-        name = request.POST.get('name')
+    if request.method == 'POST':
+        draft_name = request.POST.get('name')
         description = request.POST.get('description')
         audience = request.POST.get('audience')
         style = request.POST.get('style')
         tone = request.POST.get('tone')
         hashtags = request.POST.get('hashtags')
+        generated_description = request.POST.get('generated_description', '')
 
-        # Save draft to the database
-        draft = Draft.objects.create(
-            name=name,
-            description=description,
-            audience=audience,
-            style=style,
-            tone=tone,
-            hashtags=hashtags,
-            user=request.user  # Associate draft with the current user
-        )
+        if not draft_name or not description:
+            return JsonResponse({'success': False, 'error': 'Name and description are required.'})
 
-        return JsonResponse({"success": True})
-    return JsonResponse({"success": False})
+        try:
+            draft, created = Draft.objects.update_or_create(
+                name=draft_name,
+                user=request.user,  # Associate draft with the logged-in user
+                defaults={
+                    'description': description,
+                    'audience': audience,
+                    'style': style,
+                    'tone': tone,
+                    'hashtags': hashtags,
+                    'generated_description': generated_description,
+                }
+            )
+            return JsonResponse({'success': True, 'draft_id': draft.id})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
 @login_required
 def list_drafts(request):
     drafts = Draft.objects.filter(user=request.user).order_by("-created_at")
@@ -191,21 +202,21 @@ def list_drafts(request):
 @login_required
 def load_draft(request, draft_id):
     try:
-        draft = Draft.objects.get(id=draft_id, user=request.user)  # Make sure we fetch drafts for the current user only
-        draft_data = {
-            "success": True,
-            "draft": {
-                "name": draft.name,
-                "description": draft.description,
-                "audience": draft.audience,
-                "style": draft.style,
-                "tone": draft.tone,
-                "hashtags": draft.hashtags,
-            },
-        }
-        return JsonResponse(draft_data)
+        draft = Draft.objects.get(id=draft_id)
+        return JsonResponse({
+            'success': True,
+            'draft': {
+                'name': draft.name,
+                'description': draft.description,
+                'audience': draft.audience,
+                'style': draft.style,
+                'tone': draft.tone,
+                'hashtags': draft.hashtags,
+                'generated_description': draft.generated_description
+            }
+        })
     except Draft.DoesNotExist:
-        return JsonResponse({"success": False, "message": "Draft not found."}, status=404)
+        return JsonResponse({'success': False, 'error': 'Draft not found'})
 
 def delete_draft(request, draft_id):
     try:

@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Generate Text functionality (without saving a draft)
     if (generateButton) {
         generateButton.addEventListener("click", function (event) {
-            event.preventDefault(); // Prevent the form from being submitted, which would cause a page refresh
+            event.preventDefault();
 
             // Get the values from the form
             const description = document.getElementById("description").value;
@@ -80,31 +80,29 @@ document.addEventListener("DOMContentLoaded", function () {
             const tone = document.getElementById("tone").value;
             const hashtags = document.getElementById("hashtags").value;
 
-            // Prepare data to send to Django
+            // Prepare the data to send to the Django backend
             const data = {
                 description: description,
                 audience: audience,
                 style: style,
                 tone: tone,
                 hashtags: hashtags,
-                csrfmiddlewaretoken: getCSRFToken() // Add CSRF token for security
+                csrfmiddlewaretoken: document.querySelector("[name=csrfmiddlewaretoken]").value
             };
 
-            // Fetch URL dynamically using the correct Django URL pattern
-
-            // Make an async request to generate the description
+            // Send POST request to the Django backend
             fetch("/generate_description/", {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCSRFToken()
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: JSON.stringify(data)
+                body: new URLSearchParams(data)
             })
             .then(response => response.json())
             .then(data => {
                 if (data.generated_description) {
-                    generatedTextArea.value = data.generated_description;  // Update the textarea with generated description
+                    // Update the generated text area with the generated description
+                    document.getElementById("generated").value = data.generated_description; // Update textarea
                 }
             })
             .catch(error => {
@@ -127,85 +125,93 @@ document.addEventListener("DOMContentLoaded", function () {
     // Set the initial "generated" text
     setInitialGeneratedText();
 
-    // Save Draft functionality
-    if (saveButton) {
-        saveButton.addEventListener("click", function (event) {
-            event.preventDefault(); // Prevent form submission
+// Save Draft functionality
+if (saveButton) {
+    saveButton.addEventListener("click", function (event) {
+        event.preventDefault(); // Prevent form submission
 
-            const draftName = prompt("Enter a name for your draft:");
-            if (!draftName) return;
+        const draftName = prompt("Enter a name for your draft:");
+        if (!draftName) return;
 
-            const description = document.getElementById("description").value;
-            const audience = document.getElementById("audience").value;
-            const style = document.getElementById("style").value;
-            const tone = document.getElementById("tone").value;
-            const hashtags = document.getElementById("hashtags").value;
+        const description = document.getElementById("description").value;
+        const audience = document.getElementById("audience").value;
+        const style = document.getElementById("style").value;
+        const tone = document.getElementById("tone").value;
+        const hashtags = document.getElementById("hashtags").value;
+        const generatedDescription = document.getElementById("generated").value; // Include generated description
 
-            fetch("/save_draft/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "X-CSRFToken": getCSRFToken(),
-                },
-                body: new URLSearchParams({
-                    name: draftName,
-                    description: description,
-                    audience: audience,
-                    style: style,
-                    tone: tone,
-                    hashtags: hashtags,
-                }),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.success) {
-                        alert("Draft saved successfully!");
-                        loadDrafts(); // Refresh draft list
-                    } else {
-                        alert("Failed to save draft.");
-                    }
-                });
+        fetch("/save_draft/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": getCSRFToken(),
+            },
+            body: new URLSearchParams({
+                name: draftName,
+                description: description,
+                audience: audience,
+                style: style,
+                tone: tone,
+                hashtags: hashtags,
+                generated_description: generatedDescription,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Create and append a new draft button dynamically
+                const draftButton = document.createElement("button");
+                draftButton.textContent = draftName;
+                draftButton.addEventListener("click", () => loadDraft(data.draft_id));
+                draftsContainer.appendChild(draftButton);
+
+                alert("Draft saved successfully!");
+            } else {
+                console.error("Error saving draft:", data.error);
+                alert("Failed to save draft: " + data.error);
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    });
+}
+
+// Load specific draft
+function loadDraft(draftId) {
+    selectedDraftId = draftId; // Track the selected draft ID
+
+    fetch(`/load_draft/${draftId}/`)
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                const draft = data.draft;
+                document.getElementById("description").value = draft.description;
+                document.getElementById("audience").value = draft.audience;
+                document.getElementById("style").value = draft.style;
+                document.getElementById("tone").value = draft.tone;
+                document.getElementById("hashtags").value = draft.hashtags;
+                document.getElementById("generated").value = draft.generated_description; // Populate generated description
+            } else {
+                alert("Failed to load draft.");
+            }
         });
-    }
+}
 
-    // Load specific draft
-    function loadDraft(draftId) {
-        selectedDraftId = draftId; // Set selected draft ID when a draft is clicked
-
-        fetch(`/load_draft/${draftId}/`)
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.success) {
-                    const draft = data.draft;
-                    document.getElementById("description").value = draft.description;
-                    document.getElementById("audience").value = draft.audience;
-                    document.getElementById("style").value = draft.style;
-                    document.getElementById("tone").value = draft.tone;
-                    document.getElementById("hashtags").value = draft.hashtags;
-                    generatedTextArea.value = "This is the generated text";
-
-                } else {
-                    alert("Failed to load draft.");
-                }
-            });
-    }
-
-    // Initial load drafts
-    function loadDrafts() {
-        fetch("/list_drafts/")
-            .then((response) => response.json())
-            .then((data) => {
-                draftsContainer.innerHTML = ""; // Clear existing drafts
-                if (data.drafts) {
-                    data.drafts.forEach((draft) => {
-                        const button = document.createElement("button");
-                        button.textContent = draft.name;
-                        button.addEventListener("click", () => loadDraft(draft.id));
-                        draftsContainer.appendChild(button);
-                    });
-                }
-            });
-    }
+// Initial load drafts
+function loadDrafts() {
+    fetch("/list_drafts/")
+        .then((response) => response.json())
+        .then((data) => {
+            draftsContainer.innerHTML = ""; // Clear existing drafts
+            if (data.drafts) {
+                data.drafts.forEach((draft) => {
+                    const button = document.createElement("button");
+                    button.textContent = draft.name;
+                    button.addEventListener("click", () => loadDraft(draft.id));
+                    draftsContainer.appendChild(button);
+                });
+            }
+        });
+}
 
     // Delete Draft functionality
     if (deleteButton) {
