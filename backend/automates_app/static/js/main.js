@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Generate Text functionality (without saving a draft)
     if (generateButton) {
         generateButton.addEventListener("click", function (event) {
-            event.preventDefault(); // Prevent the form from being submitted, which would cause a page refresh
+            event.preventDefault();
 
             // Get the values from the form
             const description = document.getElementById("description").value;
@@ -80,31 +80,29 @@ document.addEventListener("DOMContentLoaded", function () {
             const tone = document.getElementById("tone").value;
             const hashtags = document.getElementById("hashtags").value;
 
-            // Prepare data to send to Django
+            // Prepare the data to send to the Django backend
             const data = {
                 description: description,
                 audience: audience,
                 style: style,
                 tone: tone,
                 hashtags: hashtags,
-                csrfmiddlewaretoken: getCSRFToken() // Add CSRF token for security
+                csrfmiddlewaretoken: document.querySelector("[name=csrfmiddlewaretoken]").value
             };
 
-            // Fetch URL dynamically using the correct Django URL pattern
-
-            // Make an async request to generate the description
+            // Send POST request to the Django backend
             fetch("/generate_description/", {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCSRFToken()
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: JSON.stringify(data)
+                body: new URLSearchParams(data)
             })
             .then(response => response.json())
             .then(data => {
                 if (data.generated_description) {
-                    generatedTextArea.value = data.generated_description;  // Update the textarea with generated description
+                    // Update the generated text area with the generated description
+                    generatedTextArea.value = data.generated_description;
                 }
             })
             .catch(error => {
