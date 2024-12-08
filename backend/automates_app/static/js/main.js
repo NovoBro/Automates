@@ -64,29 +64,52 @@ document.addEventListener("DOMContentLoaded", function () {
     // Load repository buttons
     generateRepositoryButtons();
 
+    function setInitialGeneratedText() {
+        generatedTextArea.value = "This is the generated description";  // Default text
+    }
+
     // Generate Text functionality (without saving a draft)
     if (generateButton) {
         generateButton.addEventListener("click", function (event) {
             event.preventDefault(); // Prevent the form from being submitted, which would cause a page refresh
-    
+
+            // Get the values from the form
             const description = document.getElementById("description").value;
             const audience = document.getElementById("audience").value;
             const style = document.getElementById("style").value;
             const tone = document.getElementById("tone").value;
             const hashtags = document.getElementById("hashtags").value;
-    
-            // Hardcoded generated text
-            generatedTextArea.value = `🚀 Excited to share Automates, my latest project designed to simplify LinkedIn content creation for developers!
-    
-    What is Automates?
-    Automates is a fully functional platform that generates LinkedIn posts based on your GitHub repositories. With an intuitive frontend and a robust backend, the website leverages ChatGPT to create polished, professional posts tailored to showcase your work.
-    
-    Whether you're looking to share a recent project, highlight key milestones, or present your achievements, Automates helps you turn your code into compelling stories for LinkedIn.
-    
-    👉 Check it out: https://github.com/NovoBro/Automates
-    I’d love to hear your thoughts or feedback!
-    
-    #LinkedIn`;
+
+            // Prepare data to send to Django
+            const data = {
+                description: description,
+                audience: audience,
+                style: style,
+                tone: tone,
+                hashtags: hashtags,
+                csrfmiddlewaretoken: getCSRFToken() // Add CSRF token for security
+            };
+
+            // Fetch URL dynamically using the correct Django URL pattern
+
+            // Make an async request to generate the description
+            fetch("/generate_description/", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.generated_description) {
+                    generatedTextArea.value = data.generated_description;  // Update the textarea with generated description
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         });
     }
 
@@ -100,6 +123,9 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Generated text copied to clipboard!");
         });
     }
+
+    // Set the initial "generated" text
+    setInitialGeneratedText();
 
     // Save Draft functionality
     if (saveButton) {

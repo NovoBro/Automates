@@ -10,6 +10,7 @@ import requests
 from django.conf import settings
 from .models import Draft, UserToken
 import openai
+from .chatgpt_api import ChatGPTAPI
 import os
 
 
@@ -214,25 +215,22 @@ def delete_draft(request, draft_id):
     except Draft.DoesNotExist:
         return JsonResponse({'success': False, 'message': 'Draft not found.'}, status=404)
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+def generate_description(request):
+    if request.method == 'POST':
+        # Get the form data from the POST request
+        description = request.POST.get('description')
+        audience = request.POST.get('audience')
+        style = request.POST.get('style')
+        tone = request.POST.get('tone')
+        hashtags = request.POST.get('hashtags')  # Get hashtags as well
+        
+        # Create an instance of the ChatGPTAPI class
+        chatgpt = ChatGPTAPI()
+        
+        # Generate the description based on user input
+        generated_description = chatgpt.generateDescription(description, audience, style, tone, hashtags)
+        
+        # Return the generated description as JSON
+        return JsonResponse({'generated_description': generated_description})
 
-class ChatGPTAPI():
-    def generateDescription(self, userprompt):
-        try:
-            response = openai.chat.completions.create(
-                model="chatgpt-4o-latest",
-                messages=[
-                        {
-                                "role": "system",
-                                "content": "You are a post creator for the platform LinkedIn. Using details provided input prompt, you will respond with everything in the output outline AND no less than 1,000 characters and no more than 3,000 characters in all 3 parts of the output outline. The output outline: 1. The humanized post description you generated, with emojis where logical. 2. A link to the repository provided. 3. Every hashtag provided. Notes about the outline: You need to provide every part of the outline (1,2,3), but do not list their number explicitaly."
-                        },
-                        {
-                                "role": "user",
-                                "content": userprompt
-                        }
-                ],
-                max_tokens=1000
-            )
-            return response.choices[0].message.content.strip()
-        except Exception as e:
-            return f"Error: {str(e)}"
+    return JsonResponse({'error': 'Invalid request'}, status=400)
