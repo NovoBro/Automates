@@ -14,23 +14,21 @@
   <div class="column left">
     <h1>Select Repository</h1>
     <div class="btn-group"></div>
+    
+    <!-- Description Selector -->
+    <div class="selector">
+      <h1>Description</h1>
+      <textarea id="description" name="description" class="description" rows="5" cols="50">Enter description here.</textarea>
+    </div>
 
-    <form method="POST" action="{% url 'automates_app:home' %}">
-      {% csrf_token %}
-      <!-- Description Selector -->
-      <div class="selector">
-        <h1>Description</h1>
-        <textarea id="description" name="description" class="description" rows="5" cols="50">Enter description here.</textarea>
-      </div>
-
-      <!-- Audience Selector -->
-      <div class="selector">
-        <h1>Audience</h1>
-        <select name="audience" id="audience" class="dropdown">
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
-          <option value="other">Other</option>
+    <!-- Audience Selector -->
+    <div class="selector">
+      <h1>Audience</h1>
+      <select name="audience" id="audience" class="dropdown">
+        <option value="Classmates">Classmates</option>
+        <option value="Employers">Employers</option>
+        <option value="Co-workers">Co-workers</option>
+        <option value="other">Other</option>
         </select>
         <textarea id="audienceTextBox" name="audienceTextBox" class="otherBox" rows="1" cols="20"></textarea>
       </div>
@@ -39,9 +37,9 @@
       <div class="selector">
         <h1>Style</h1>
         <select name="style" id="style" class="dropdown">
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
+          <option value="Professional">Professional</option>
+          <option value="Academic">Academic</option>
+          <option value="Casual">Casual</option>
           <option value="other">Other</option>
         </select>
         <textarea id="styleTextBox" name="styleTextBox" class="otherBox" rows="1" cols="20"></textarea>
@@ -51,9 +49,9 @@
       <div class="selector">
         <h1>Tone</h1>
         <select name="tone" id="tone" class="dropdown">
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
+          <option value="Formal">Formal</option>
+          <option value="Friendly">Friendly</option>
+          <option value="Casual">Casual</option>
           <option value="other">Other</option>
         </select>
         <textarea id="toneTextBox" name="toneTextBox" class="otherBox" rows="1" cols="20"></textarea>
@@ -71,7 +69,8 @@
 
   <!-- Right Column (Generated Text) -->
   <div class="column right">
-    <textarea id="generated" name="generated" class="generated" rows="15" cols="60" readonly>Text will be generated here.</textarea>
+    <h1>Generated LinkedIn Description</h1>
+    <textarea id="descriptionOutput" name="generated" class="generated" rows="15" cols="60" readonly>Text will be generated here.</textarea>
   </div>
 </div>
 

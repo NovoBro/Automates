@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .views import home, authView, accounts, delete_account, githubAuth, fetchUserRepos, github_callback  # Import delete_account view
-from .views import save_draft, list_drafts, load_draft, delete_draft
+from .views import save_draft, list_drafts, load_draft, delete_draft, generate_description_view
 
 urlpatterns = [
     path("", home, name="home"),
@@ -12,7 +12,8 @@ urlpatterns = [
     path("delete_account/", delete_account, name="delete_account"),  # Path to handle account deletion
     path('auth/', githubAuth, name='github_authenticate'),
     path('repos/', fetchUserRepos, name='fetch_user_repos'),
-    path('callback/', github_callback, name='github_callback'),    
+    path('callback/', github_callback, name='github_callback'), 
+    path('generate-description/', generate_description_view, name='generate_description'),
     path("save_draft/", save_draft, name="save_draft"),
     path("list_drafts/", list_drafts, name="list_drafts"),
     path("load_draft/<int:draft_id>/", load_draft, name="load_draft"),
