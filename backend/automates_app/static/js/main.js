@@ -239,6 +239,81 @@ function loadDrafts() {
         });
     }
 
+    let tempUsername = "";
+    //fetch and store username
+    async function fetchUsername() {
+        try {
+            const response = await fetch('/fetch_username/');
+            if (!response.ok) {
+                throw new Error(`Error fetching username: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            if (data.username) {
+                console.log(`GitHub Username: ${data.username}`);
+                //Store as global var
+                tempUsername = data.username;
+    
+                //User username to fetch repositories
+                fetchRepositories(tempUsername);
+            } else {
+                console.error("Failed to fetch username");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
+    //
+    async function fetchRepositories(username) {
+        if (!username) {
+            console.error("Username is not defined");
+            return;
+        }
+        
+        try {
+            const response = await fetch(`/fetch_repositories/${username}/`);
+            if (!response.ok) {
+                throw new Error(`Error fetching repositories: ${response.status}`);
+            }
+    
+            const repositories = await response.json();
+            console.log("Fetched Repositories:", repositories);
+    
+            //Display Repos
+            const btnGroup = document.getElementById('.btn-group');
+            if (btnGroup) {
+                //clear previous buttons
+                btnGroup.innerHTML = '';
+    
+                repositories.forEach(repo => {
+                    //Button for each repo
+                    const button = document.createElement('button');
+
+                    //Style
+                    button.classList.add('button', 'repo-button');
+                    //button text to repository name
+                    button.textContent = repo.name;
+
+                    button.addEventListener('click', () => {
+                        alert(`Repository Name: ${repo.name}\nURL: ${repo.html_url}`);
+                        //Additional functionality to be added here 
+                    });
+                    btnGroup.appendChild(button);
+                });
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
+    //grabs github username
+    fetchUsername();
+        
+    //Uses username to get repositories
+    fetchRepositories(username);
+
+
     // Set the initial "generated" text
     setInitialGeneratedText();
 
