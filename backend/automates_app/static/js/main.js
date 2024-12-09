@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Script loaded");
 
-    // Utility: Get CSRF Token
+    //Get CSRF Token
     function getCSRFToken() {
       return document.querySelector("[name=csrfmiddlewaretoken]").value;
     }
@@ -14,9 +14,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const generatedTextArea = document.getElementById("generated");
     const copyButton = document.getElementById("copyButton");
 
-    let selectedDraftId = null;  // Track selected draft
+    let selectedDraftId = null;
 
-    // Hardcoded repositories (as provided)
+    // Repository List
     const repositories = [
       { "name": "Automates", "date created": "1986-12-14", "description": "Text-generator for LinkedIn posts" },
       { "name": "Test repo", "date created": "1986-12-14", "description": "description100!" },
@@ -26,36 +26,36 @@ document.addEventListener("DOMContentLoaded", function () {
     ];
 
     // Repository buttons container
-    const btnGroup = document.querySelector(".btn-group"); // Repository buttons container
-    let activeRepository = null; // Track the currently active repository
+    const btnGroup = document.querySelector(".btn-group"); 
+    let activeRepository = null;
 
     // Set initial generated text
     function setInitialGeneratedText() {
-        generatedTextArea.value = "This is the generated description";  // Default text
+        generatedTextArea.value = "This is the generated description"; 
     }
 
     // Generate repository buttons
     function generateRepositoryButtons() {
         if (btnGroup) {
-            btnGroup.innerHTML = ''; // Clear any existing buttons
+            btnGroup.innerHTML = ''; 
 
             repositories.forEach(repo => {
                 const button = document.createElement('button');
-                button.textContent = repo.name; // Set button name
+                button.textContent = repo.name; 
 
                 // Add click event listener
                 button.addEventListener('click', function () {
                     if (activeRepository) {
-                        activeRepository.style.backgroundColor = ''; // Reset previous button
+                        activeRepository.style.backgroundColor = ''; 
                     }
-                    button.style.backgroundColor = "#2d343c"; // Highlight the selected button
-                    activeRepository = button; // Update the active button reference
+                    button.style.backgroundColor = "#2d343c"; 
+                    activeRepository = button; 
 
                     console.log("Current repository:", repo.name);
-                    generatedTextArea.value = `🚀 Repository: ${repo.name}\n\nDescription: ${repo.description}`;
+                    generatedTextArea.value = `🚀 Repository: ${repo.name}`;
                 });
 
-                // Append the button to the container
+                
                 btnGroup.appendChild(button);
             });
         }
@@ -65,10 +65,10 @@ document.addEventListener("DOMContentLoaded", function () {
     generateRepositoryButtons();
 
     function setInitialGeneratedText() {
-        generatedTextArea.value = "This is the generated description";  // Default text
+        generatedTextArea.value = "This is the generated description"; 
     }
 
-    // Generate Text functionality (without saving a draft)
+    // Generate Text functionality
     if (generateButton) {
         generateButton.addEventListener("click", function (event) {
             event.preventDefault();
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const tone = document.getElementById("tone").value;
             const hashtags = document.getElementById("hashtags").value;
 
-            // Prepare the data to send to the Django backend
+            // Prepare the data to send to Django
             const data = {
                 description: description,
                 audience: audience,
@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 csrfmiddlewaretoken: document.querySelector("[name=csrfmiddlewaretoken]").value
             };
 
-            // Send POST request to the Django backend
+            // Send POST request to Django
             fetch("/generate_description/", {
                 method: 'POST',
                 headers: {
@@ -101,8 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(response => response.json())
             .then(data => {
                 if (data.generated_description) {
-                    // Update the generated text area with the generated description
-                    document.getElementById("generated").value = data.generated_description; // Update textarea
+                    document.getElementById("generated").value = data.generated_description;
                 }
             })
             .catch(error => {
@@ -114,10 +113,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Copy Generated Text functionality
     if (copyButton) {
         copyButton.addEventListener("click", function () {
-            generatedTextArea.select(); // Select the text in the textarea
-            document.execCommand("copy"); // Execute the copy command
+            generatedTextArea.select();
+            document.execCommand("copy"); 
             
-            // Alert the user that the text has been copied
             alert("Generated text copied to clipboard!");
         });
     }
@@ -128,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Save Draft functionality
 if (saveButton) {
     saveButton.addEventListener("click", function (event) {
-        event.preventDefault(); // Prevent form submission
+        event.preventDefault(); 
 
         const draftName = prompt("Enter a name for your draft:");
         if (!draftName) return;
@@ -138,7 +136,7 @@ if (saveButton) {
         const style = document.getElementById("style").value;
         const tone = document.getElementById("tone").value;
         const hashtags = document.getElementById("hashtags").value;
-        const generatedDescription = document.getElementById("generated").value; // Include generated description
+        const generatedDescription = document.getElementById("generated").value; 
 
         fetch("/save_draft/", {
             method: "POST",
@@ -159,7 +157,7 @@ if (saveButton) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Create and append a new draft button dynamically
+                // Create a new draft button dynamically
                 const draftButton = document.createElement("button");
                 draftButton.textContent = draftName;
                 draftButton.addEventListener("click", () => loadDraft(data.draft_id));
@@ -177,7 +175,7 @@ if (saveButton) {
 
 // Load specific draft
 function loadDraft(draftId) {
-    selectedDraftId = draftId; // Track the selected draft ID
+    selectedDraftId = draftId;
 
     fetch(`/load_draft/${draftId}/`)
         .then((response) => response.json())
@@ -189,7 +187,7 @@ function loadDraft(draftId) {
                 document.getElementById("style").value = draft.style;
                 document.getElementById("tone").value = draft.tone;
                 document.getElementById("hashtags").value = draft.hashtags;
-                document.getElementById("generated").value = draft.generated_description; // Populate generated description
+                document.getElementById("generated").value = draft.generated_description;
             } else {
                 alert("Failed to load draft.");
             }
@@ -201,7 +199,7 @@ function loadDrafts() {
     fetch("/list_drafts/")
         .then((response) => response.json())
         .then((data) => {
-            draftsContainer.innerHTML = ""; // Clear existing drafts
+            draftsContainer.innerHTML = "";
             if (data.drafts) {
                 data.drafts.forEach((draft) => {
                     const button = document.createElement("button");
@@ -232,7 +230,7 @@ function loadDrafts() {
               .then((data) => {
                 if (data.success) {
                   alert("Draft deleted successfully!");
-                  loadDrafts(); // Refresh draft list
+                  loadDrafts();
                 } else {
                   alert("Failed to delete draft.");
                 }

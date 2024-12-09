@@ -8,11 +8,13 @@
       {% csrf_token %}
       {{ form }}
       <div class="button-container">
-        <button type="submit" class="button small">Sign in</button>  <!-- Apply the small button class here -->
+        <!-- Create Sign In Button -->
+        <button type="submit" class="button small">Sign in</button> 
       </div>
     </form>
     <div class="button-container">
-      <a class="button small signup-link" href="{% url 'automates_app:authView' %}">Sign Up</a> <!-- Apply the same button styling here -->
+      <!-- Create Sign up Button -->
+      <a class="button small signup-link" href="{% url 'automates_app:authView' %}">Sign Up</a>
     </div>
   </div>
 </div>

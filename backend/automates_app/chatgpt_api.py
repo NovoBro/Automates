@@ -22,10 +22,8 @@ class ChatGPTAPI:
             Tone: {tone}
             Hashtags: {hashtags}
             """
-
-            # Corrected method to use `ChatCompletion.create` for newer OpenAI API
             response = openai.ChatCompletion.create(
-                model="gpt-4",  # Use gpt-4 or gpt-3.5-turbo if preferred
+                model="gpt-4", 
                 messages=[
                     {"role": "system", "content": "You are a post creator for LinkedIn."},
                     {"role": "user", "content": prompt}
@@ -33,11 +31,9 @@ class ChatGPTAPI:
                 max_tokens=1000
             )
 
-            # Extract the generated description from the response
             generated_description = response['choices'][0]['message']['content'].strip()
 
             return generated_description
 
         except Exception as e:
-            # Handle any errors that occur and return the exception message
             return f"Error: {str(e)}"

@@ -4,7 +4,7 @@
   margin: 0;
   box-sizing: border-box;
   font-family: "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
-  color: #000000; /* Black text for all elements */
+  color: #000000;
   transition: 0.3s all ease-in-out;
 }
 
@@ -12,28 +12,28 @@
 html, body {
   margin: 0;
   padding: 0;
-  background-color: #ffffff; /* Set the background color to white */
+  background-color: #ffffff;
   display: flex;
   flex-direction: column;
   height: 100%;
   font-size: 1.6rem;
   line-height: 1.6;
-  color: #000000; /* Black text for better readability */
+  color: #000000; 
 }
 
 /* Top bar styling */
 .top {
   width: 100%;
   position: fixed;
-  background-color: #010409; /* Dark background color */
-  height: 40px; /* Reduced height of the top bar */
+  background-color: #010409; 
+  height: 40px; 
   border-bottom: 1px solid #2d343c;
   top: 0;
   z-index: 1000;
   display: flex;
-  justify-content: flex-end; /* Align buttons to the right */
-  align-items: center; /* Vertically center the buttons */
-  padding-right: 20px; /* Adjust for spacing */
+  justify-content: flex-end; 
+  align-items: center; 
+  padding-right: 20px; 
 }
 
 /* Buffer to make space for fixed top */
@@ -45,11 +45,11 @@ html, body {
 .main-content {
   display: flex;
   justify-content: space-between;
-  padding: 120px 20px 20px; /* Padding to avoid overlap with fixed header */
-  margin-bottom: 100px; /* Added margin for bottom spacing */
+  padding: 120px 20px 20px;
+  margin-bottom: 100px; 
 }
 
-/* Left Column (Form Inputs) */
+/* Left Column */
 .form-column {
   width: 60%;
 }
@@ -104,18 +104,18 @@ textarea:disabled {
   border-radius: 5px;
 }
 
-/* Button Styling */
+/* Basic Button Styling */
 .button {
-  border: 1px solid #2d343c; /* Border color */
-  border-radius: 8px; /* Rounded corners */
-  color: #f0f6fc; /* Text color */
-  background-color: #0d1117; /* Background color */
-  padding: 20px 40px; /* Padding for the button */
-  font-size: 1.6rem; /* Font size */
-  transition-duration: 0.4s; /* Smooth transition on hover */
-  cursor: pointer; /* Cursor pointer */
-  margin-top: 20px; /* Margin on top of buttons */
-  width: 100%; /* Make button stretch to full width */
+  border: 1px solid #2d343c; 
+  border-radius: 8px; 
+  color: #f0f6fc; 
+  background-color: #0d1117; 
+  padding: 20px 40px; 
+  font-size: 1.6rem; 
+  transition-duration: 0.4s; 
+  cursor: pointer; 
+  margin-top: 20px;
+  width: 100%; 
 }
 
 .button:hover {
@@ -129,19 +129,19 @@ textarea:disabled {
   font-size: 2rem;
 }
 
-/* Small Button for Account and Logout */
+/* Small Button */
 .button.small {
   font-size: 1.2rem;
-  padding: 10px 20px; /* Adjust padding to make the button smaller */
-  background-color: #010409; /* Matching the dark theme for buttons */
+  padding: 10px 20px; 
+  background-color: #010409; 
   color: white;
   margin-right: 10px;
   margin-top: 10px;
-  width: auto;  /* Make the button smaller */
-  text-align: center; /* Align text */
+  width: auto;  
+  text-align: center; 
 }
 
-/* Right Column (Generated Text) */
+/* Generated Text */
 .output-column {
   width: 35%;
 }
@@ -159,8 +159,8 @@ textarea:disabled {
   font-size: 1.4rem;
   margin-top: 20px;
   overflow-y: auto;
-  position: relative; /* Keeps it below the generate button */
-  bottom: 0; /* Positions the generated text box at the bottom */
+  position: relative; 
+  bottom: 0; 
 }
 
 /* Copyright styling */
@@ -171,7 +171,7 @@ textarea:disabled {
   margin-bottom: 10px;
 }
 
-/* Media queries for responsive design */
+/* Responsive design */
 @media (max-width: 768px) {
   .main-content {
     flex-direction: column;

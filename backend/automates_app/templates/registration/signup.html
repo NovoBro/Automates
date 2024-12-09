@@ -8,11 +8,12 @@
       {% csrf_token %}
       {{ form }}
       <div class="button-container">
-        <!-- Create Account Button on a new line -->
+        <!-- Create Account Button -->
         <button class="button small">Create Account</button>
       </div>
     </form>
     <div class="button-container">
+      <!-- Create Go to Log in Button -->
       <a href="{% url 'automates_app:login' %}" class="button small">Go to Log In</a>
     </div>
   </div>

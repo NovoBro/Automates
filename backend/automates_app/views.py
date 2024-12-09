@@ -15,9 +15,11 @@ import os
 
 
 @login_required
+#renders home page
 def home(request):
     return render(request, "home.html", {})
 
+#uses Django's innate user class to sign up and log them in
 def authView(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST or None)
@@ -28,22 +30,20 @@ def authView(request):
         form = UserCreationForm()
     return render(request, "registration/signup.html", {"form": form})
 
+#delete current user's account
 def delete_account(request):
     if request.method == "POST":
-        # Get the current user
         user = request.user
 
-        # Log the user out first
         logout(request)
 
-        # Delete the user from the database
         user.delete()
 
-        # Redirect to home after deletion
         return redirect("automates_app:home")
     else:
         return HttpResponseForbidden("Invalid request method")
 
+#renders account page
 def accounts(request):
     return render(request, "accounts.html")
 
@@ -161,6 +161,7 @@ def github_callback(request):
     return HttpResponseRedirect(redirect_url)
 
 @login_required
+#saves the current's users work as a draft
 def save_draft(request):
     if request.method == 'POST':
         draft_name = request.POST.get('name')
@@ -177,7 +178,7 @@ def save_draft(request):
         try:
             draft, created = Draft.objects.update_or_create(
                 name=draft_name,
-                user=request.user,  # Associate draft with the logged-in user
+                user=request.user, 
                 defaults={
                     'description': description,
                     'audience': audience,
@@ -194,12 +195,14 @@ def save_draft(request):
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 @login_required
+#lists what drafts the current user has
 def list_drafts(request):
     drafts = Draft.objects.filter(user=request.user).order_by("-created_at")
-    drafts_data = drafts.values("id", "name")  # Only sending the id and name to reduce payload size
+    drafts_data = drafts.values("id", "name")
     return JsonResponse({"drafts": list(drafts_data)})
 
 @login_required
+#loads the draft that a user clicks on as the current settings for a post
 def load_draft(request, draft_id):
     try:
         draft = Draft.objects.get(id=draft_id)
@@ -218,30 +221,28 @@ def load_draft(request, draft_id):
     except Draft.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Draft not found'})
 
+#deletes the draft that a user is currently using/clicked on
 def delete_draft(request, draft_id):
     try:
-        draft = Draft.objects.get(id=draft_id, user=request.user)  # Ensure the draft belongs to the current user
-        draft.delete()  # Delete the draft
+        draft = Draft.objects.get(id=draft_id, user=request.user) 
+        draft.delete()  
         return JsonResponse({'success': True, 'message': 'Draft deleted successfully.'})
     except Draft.DoesNotExist:
         return JsonResponse({'success': False, 'message': 'Draft not found.'}, status=404)
 
+#generates a gpt desciption based on what the user wants
 def generate_description(request):
     if request.method == 'POST':
-        # Get the form data from the POST request
         description = request.POST.get('description')
         audience = request.POST.get('audience')
         style = request.POST.get('style')
         tone = request.POST.get('tone')
-        hashtags = request.POST.get('hashtags')  # Get hashtags as well
+        hashtags = request.POST.get('hashtags')  
         
-        # Create an instance of the ChatGPTAPI class
         chatgpt = ChatGPTAPI()
         
-        # Generate the description based on user input
         generated_description = chatgpt.generateDescription(description, audience, style, tone, hashtags)
         
-        # Return the generated description as JSON
         return JsonResponse({'generated_description': generated_description})
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
